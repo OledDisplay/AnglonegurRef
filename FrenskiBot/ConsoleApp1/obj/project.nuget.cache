@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "dc0CqzZ2IZ0=",
+  "success": true,
+  "projectFilePath": "c:\\Users\\marti\\allFolder\\code\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marti\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}
