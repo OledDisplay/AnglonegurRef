@@ -1,0 +1,74 @@
+# Ignore everything in the bin folder
+bin/*
+
+# Except nuget.exe
+!bin/nuget.exe
+
+# Ignore other common files
+obj/
+*.dll
+*.exe
+*.pdb
+*.log
+*.cache
+*.tmp
+*.bak
+*.swp
+
+# NuGet packages
+*.nupkg
+packages/
+.nuget/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# DotNet Specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.deps.json
+*.runtimeconfig.json
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Generated files
+tessdata/
+tessdata_best/
+tessdata_fast/
+
+# Configuration files
+*.config
+*.json
+appsettings*.json
+
+# Exclude Tesseract binary models if dynamically generated
+bul.traineddata
+
+# Other IDE-specific files
+*.idea/
+_ReSharper.Caches/
