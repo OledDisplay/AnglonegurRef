@@ -20,7 +20,7 @@ class Program
 
         string projectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
         string imageFolder = Path.Combine(projectRoot, "Test");
-        string imagePath = Path.Combine(imageFolder, "Test5.png");
+        string imagePath = Path.Combine(imageFolder, "Test2.png");
 
         // Ensure tessdata folder exists
         if (!Directory.Exists(tessDataPath))
@@ -76,11 +76,15 @@ class Program
             Console.WriteLine($"Error during NuGet restore: {ex.Message}");
         }
 
+        // Call image post - prosses
+        string prossesedPath = Path.Combine(imageFolder,Path.GetFileNameWithoutExtension(imagePath) + "Processed" + Path.GetExtension(imagePath));
+        ImageProcessor.ProcessImage(imagePath,prossesedPath);
+
         // Call OCR functionality
         try
         {
             Console.WriteLine("Starting OCR...");
-            OcrProcessor.ProcessImage(tessDataPath, imagePath);
+            OcrProcessor.ProcessImage(tessDataPath, prossesedPath);
             Console.WriteLine("OCR Completed.");
         }
         catch (Exception ex)
