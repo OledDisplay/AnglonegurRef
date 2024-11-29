@@ -1,11 +1,36 @@
 {
   "version": 2,
-  "dgSpecHash": "4jPTJSJdAww=",
+  "dgSpecHash": "NB9jKszDjw4=",
   "success": true,
-  "projectFilePath": "c:\\Users\\marti\\Code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
+  "projectFilePath": "c:\\Users\\marti\\allFolder\\code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\marti\\.nuget\\packages\\opencvsharp4\\4.7.0.20230112\\opencvsharp4.4.7.0.20230112.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\opencvsharp4.runtime.win\\4.7.0.20230115\\opencvsharp4.runtime.win.4.7.0.20230115.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "ConsoleApp1 depends on OpenCvSharp4 (>= 4.7.0) but OpenCvSharp4 4.7.0 was not found. An approximate best match of OpenCvSharp4 4.7.0.20230112 was resolved.",
+      "libraryId": "OpenCvSharp4",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "ConsoleApp1 depends on OpenCvSharp4.runtime.win (>= 4.7.0) but OpenCvSharp4.runtime.win 4.7.0 was not found. An approximate best match of OpenCvSharp4.runtime.win 4.7.0.20230115 was resolved.",
+      "libraryId": "OpenCvSharp4.runtime.win",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

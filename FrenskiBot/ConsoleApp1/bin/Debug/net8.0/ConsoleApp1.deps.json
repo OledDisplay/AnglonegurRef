@@ -8,13 +8,53 @@
     ".NETCoreApp,Version=v8.0": {
       "ConsoleApp1/1.0.0": {
         "dependencies": {
+          "OpenCvSharp4": "4.7.0.20230112",
+          "OpenCvSharp4.runtime.win": "4.7.0.20230115",
           "Tesseract": "5.2.0"
         },
         "runtime": {
           "ConsoleApp1.dll": {}
         }
       },
+      "OpenCvSharp4/4.7.0.20230112": {
+        "dependencies": {
+          "System.Memory": "4.5.4",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/OpenCvSharp.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "OpenCvSharp4.runtime.win/4.7.0.20230115": {
+        "runtimeTargets": {
+          "runtimes/win-x64/native/OpenCvSharpExtern.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x64/native/opencv_videoio_ffmpeg470_64.dll": {
+            "rid": "win-x64",
+            "assetType": "native",
+            "fileVersion": "2022.12.0.0"
+          },
+          "runtimes/win-x86/native/OpenCvSharpExtern.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "0.0.0.0"
+          },
+          "runtimes/win-x86/native/opencv_videoio_ffmpeg470.dll": {
+            "rid": "win-x86",
+            "assetType": "native",
+            "fileVersion": "2022.12.0.0"
+          }
+        }
+      },
+      "System.Memory/4.5.4": {},
       "System.Reflection.Emit/4.7.0": {},
+      "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
       "Tesseract/5.2.0": {
         "dependencies": {
           "System.Reflection.Emit": "4.7.0"
@@ -34,12 +74,40 @@
       "serviceable": false,
       "sha512": ""
     },
+    "OpenCvSharp4/4.7.0.20230112": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-FxzT2pB4lwmIFl9lYxisPh4HlegDJVAQTpLcYGMSB8oOEFHEBDiOD26O5D63+nU5kxdiXQV5IF6V/9tJ5eF7Tg==",
+      "path": "opencvsharp4/4.7.0.20230112",
+      "hashPath": "opencvsharp4.4.7.0.20230112.nupkg.sha512"
+    },
+    "OpenCvSharp4.runtime.win/4.7.0.20230115": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-T5vVLA9rTIQ5HUQszG1RoACKjvkoiHugzQOWjFq3Eng447CWdBuxUepusUzMucl/K2O2ArRwwc999J2JymmjTA==",
+      "path": "opencvsharp4.runtime.win/4.7.0.20230115",
+      "hashPath": "opencvsharp4.runtime.win.4.7.0.20230115.nupkg.sha512"
+    },
+    "System.Memory/4.5.4": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
+      "path": "system.memory/4.5.4",
+      "hashPath": "system.memory.4.5.4.nupkg.sha512"
+    },
     "System.Reflection.Emit/4.7.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-VR4kk8XLKebQ4MZuKuIni/7oh+QGFmZW3qORd1GvBq/8026OpW501SzT/oypwiQl4TvT8ErnReh/NzY9u+C6wQ==",
       "path": "system.reflection.emit/4.7.0",
       "hashPath": "system.reflection.emit.4.7.0.nupkg.sha512"
+    },
+    "System.Runtime.CompilerServices.Unsafe/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg==",
+      "path": "system.runtime.compilerservices.unsafe/6.0.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
     },
     "Tesseract/5.2.0": {
       "type": "package",
