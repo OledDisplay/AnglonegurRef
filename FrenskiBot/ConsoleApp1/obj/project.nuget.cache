@@ -1,0 +1,48 @@
+{
+  "version": 2,
+  "dgSpecHash": "3FJ7bAMMlMo=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\marti\\Code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\marti\\.nuget\\packages\\opencvsharp4\\4.7.0.20230112\\opencvsharp4.4.7.0.20230112.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\opencvsharp4.runtime.win\\4.7.0.20230115\\opencvsharp4.runtime.win.4.7.0.20230115.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\selenium.webdriver\\4.27.0\\selenium.webdriver.4.27.0.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\selenium.webdriver.chromedriver\\71.0.3578.137\\selenium.webdriver.chromedriver.71.0.3578.137.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\marti\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "ConsoleApp1 depends on OpenCvSharp4 (>= 4.7.0) but OpenCvSharp4 4.7.0 was not found. An approximate best match of OpenCvSharp4 4.7.0.20230112 was resolved.",
+      "libraryId": "OpenCvSharp4",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "ConsoleApp1 depends on OpenCvSharp4.runtime.win (>= 4.7.0) but OpenCvSharp4.runtime.win 4.7.0 was not found. An approximate best match of OpenCvSharp4.runtime.win 4.7.0.20230115 was resolved.",
+      "libraryId": "OpenCvSharp4.runtime.win",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "ConsoleApp1 depends on Selenium.WebDriver.ChromeDriver (>= 4.27.0) but Selenium.WebDriver.ChromeDriver 4.27.0 was not found. An approximate best match of Selenium.WebDriver.ChromeDriver 71.0.3578.137 was resolved.",
+      "libraryId": "Selenium.WebDriver.ChromeDriver",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}
