@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using OpenQA.Selenium.DevTools;
 
 class Program
 {
@@ -18,10 +19,16 @@ class Program
         string tessDataPath = Path.Combine(projectDir, "tessdata");
         string tessDataFile = Path.Combine(tessDataPath, $"{lang}.traineddata"); // Language model
 
+        // Ocr image paths
         string projectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
         string imageFolder = Path.Combine(projectRoot, "Test");
         string imagePath = Path.Combine(imageFolder, "Test2.png");
 
+        //Download web page
+        string url = "https://bg.e-prosveta.bg/free-book/399?page="; // Site url
+        string LogName = "jmatrozova@abv.bg";
+        string LogPass = "parisjm1603";
+        
         // Ensure tessdata folder exists
         if (!Directory.Exists(tessDataPath))
         {
@@ -75,6 +82,9 @@ class Program
         {
             Console.WriteLine($"Error during NuGet restore: {ex.Message}");
         }
+
+        // Get png from webpage
+        DownloadInfoScript.DownloadScript(url,projectRoot, LogName, LogPass); // url to textbook page,project root,LoginName,LoginPass
 
         // Call image post - prosses
         string prossesedPath = Path.Combine(imageFolder,Path.GetFileNameWithoutExtension(imagePath) + "Processed" + Path.GetExtension(imagePath));

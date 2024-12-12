@@ -2,10 +2,32 @@
   "version": 3,
   "targets": {
     "net8.0": {
-      "OpenCvSharp4/4.7.0.20230112": {
+      "Microsoft.Win32.SystemEvents/9.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "OpenCvSharp4/4.8.0.20230708": {
         "type": "package",
         "dependencies": {
-          "System.Memory": "4.5.4",
+          "System.Memory": "4.5.5",
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "compile": {
@@ -19,7 +41,7 @@
           }
         }
       },
-      "OpenCvSharp4.runtime.win/4.7.0.20230115": {
+      "OpenCvSharp4.runtime.win/4.8.0.20230708": {
         "type": "package",
         "build": {
           "build/net5.0/OpenCvSharp4.runtime.win.props": {}
@@ -29,7 +51,7 @@
             "assetType": "native",
             "rid": "win-x64"
           },
-          "runtimes/win-x64/native/opencv_videoio_ffmpeg470_64.dll": {
+          "runtimes/win-x64/native/opencv_videoio_ffmpeg480_64.dll": {
             "assetType": "native",
             "rid": "win-x64"
           },
@@ -37,9 +59,25 @@
             "assetType": "native",
             "rid": "win-x86"
           },
-          "runtimes/win-x86/native/opencv_videoio_ffmpeg470.dll": {
+          "runtimes/win-x86/native/opencv_videoio_ffmpeg480.dll": {
             "assetType": "native",
             "rid": "win-x86"
+          }
+        }
+      },
+      "Selenium.Support/4.27.0": {
+        "type": "package",
+        "dependencies": {
+          "Selenium.WebDriver": "4.27.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/WebDriver.Support.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/WebDriver.Support.dll": {
+            "related": ".xml"
           }
         }
       },
@@ -59,13 +97,38 @@
           "buildTransitive/Selenium.WebDriver.targets": {}
         }
       },
-      "Selenium.WebDriver.ChromeDriver/71.0.3578.137": {
+      "Selenium.WebDriver.ChromeDriver/114.0.5735.1600": {
         "type": "package",
         "build": {
           "build/Selenium.WebDriver.ChromeDriver.targets": {}
         }
       },
-      "System.Memory/4.5.4": {
+      "System.Drawing.Common/9.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "9.0.0"
+        },
+        "compile": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net8.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/System.Drawing.Common.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/net8.0/System.Private.Windows.Core.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "System.Memory/4.5.5": {
         "type": "package",
         "compile": {
           "ref/netcoreapp2.1/_._": {}
@@ -121,10 +184,42 @@
     }
   },
   "libraries": {
-    "OpenCvSharp4/4.7.0.20230112": {
-      "sha512": "FxzT2pB4lwmIFl9lYxisPh4HlegDJVAQTpLcYGMSB8oOEFHEBDiOD26O5D63+nU5kxdiXQV5IF6V/9tJ5eF7Tg==",
+    "Microsoft.Win32.SystemEvents/9.0.0": {
+      "sha512": "z8FfGIaoeALdD+KF44A2uP8PZIQQtDGiXsOLuN8nohbKhkyKt7zGaZb+fKiCxTuBqG22Q7myIAioSWaIcOOrOw==",
       "type": "package",
-      "path": "opencvsharp4/4.7.0.20230112",
+      "path": "microsoft.win32.systemevents/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Win32.SystemEvents.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Win32.SystemEvents.targets",
+        "lib/net462/Microsoft.Win32.SystemEvents.dll",
+        "lib/net462/Microsoft.Win32.SystemEvents.xml",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net8.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/net9.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/net9.0/Microsoft.Win32.SystemEvents.xml",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
+        "microsoft.win32.systemevents.9.0.0.nupkg.sha512",
+        "microsoft.win32.systemevents.nuspec",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.xml",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "OpenCvSharp4/4.8.0.20230708": {
+      "sha512": "MmZqvNUJuTUWQfkyXN1NOxJjx6JNfaedMOnY0dAdP5zgaKMAsxwwX5pkZl/F40JheSo3oMJhI7nhDC3kh7/ISQ==",
+      "type": "package",
+      "path": "opencvsharp4/4.8.0.20230708",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -132,20 +227,18 @@
         "lib/net48/OpenCvSharp.xml",
         "lib/net6.0/OpenCvSharp.dll",
         "lib/net6.0/OpenCvSharp.xml",
-        "lib/netcoreapp3.1/OpenCvSharp.dll",
-        "lib/netcoreapp3.1/OpenCvSharp.xml",
         "lib/netstandard2.0/OpenCvSharp.dll",
         "lib/netstandard2.0/OpenCvSharp.xml",
         "lib/netstandard2.1/OpenCvSharp.dll",
         "lib/netstandard2.1/OpenCvSharp.xml",
-        "opencvsharp4.4.7.0.20230112.nupkg.sha512",
+        "opencvsharp4.4.8.0.20230708.nupkg.sha512",
         "opencvsharp4.nuspec"
       ]
     },
-    "OpenCvSharp4.runtime.win/4.7.0.20230115": {
-      "sha512": "T5vVLA9rTIQ5HUQszG1RoACKjvkoiHugzQOWjFq3Eng447CWdBuxUepusUzMucl/K2O2ArRwwc999J2JymmjTA==",
+    "OpenCvSharp4.runtime.win/4.8.0.20230708": {
+      "sha512": "V9zbVQXazSSoEG04nF1KEkxfY62WMQAcKAlDe7xgkNErY7WQZzEcj8dMEuHXQMaDr45jPvrJi50SQroi+w4wNw==",
       "type": "package",
-      "path": "opencvsharp4.runtime.win/4.7.0.20230115",
+      "path": "opencvsharp4.runtime.win/4.8.0.20230708",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -153,12 +246,26 @@
         "build/net5.0/OpenCvSharp4.runtime.win.props",
         "build/netcoreapp/OpenCvSharp4.runtime.win.props",
         "build/netstandard/OpenCvSharp4.runtime.win.props",
-        "opencvsharp4.runtime.win.4.7.0.20230115.nupkg.sha512",
+        "opencvsharp4.runtime.win.4.8.0.20230708.nupkg.sha512",
         "opencvsharp4.runtime.win.nuspec",
         "runtimes/win-x64/native/OpenCvSharpExtern.dll",
-        "runtimes/win-x64/native/opencv_videoio_ffmpeg470_64.dll",
+        "runtimes/win-x64/native/opencv_videoio_ffmpeg480_64.dll",
         "runtimes/win-x86/native/OpenCvSharpExtern.dll",
-        "runtimes/win-x86/native/opencv_videoio_ffmpeg470.dll"
+        "runtimes/win-x86/native/opencv_videoio_ffmpeg480.dll"
+      ]
+    },
+    "Selenium.Support/4.27.0": {
+      "sha512": "vPsJmYP+ONxutAmkpSc2cXJCO/eHjP+4dccx/M9mGntOZuVjM0DOzyH2cvX8tDoQ18yUq8l2P4rA3a278Gp2KQ==",
+      "type": "package",
+      "path": "selenium.support/4.27.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/netstandard2.0/WebDriver.Support.dll",
+        "lib/netstandard2.0/WebDriver.Support.xml",
+        "selenium.support.4.27.0.nupkg.sha512",
+        "selenium.support.nuspec"
       ]
     },
     "Selenium.WebDriver/4.27.0": {
@@ -183,25 +290,71 @@
         "selenium.webdriver.nuspec"
       ]
     },
-    "Selenium.WebDriver.ChromeDriver/71.0.3578.137": {
-      "sha512": "CjoQh2GovtIeS3BfiL/IEVyqxQu0dWVL+xexWY42yvmgaCv3QeyhnbZRj0stwjNY6lOxXFpWzECaZ7XI9kAl0g==",
+    "Selenium.WebDriver.ChromeDriver/114.0.5735.1600": {
+      "sha512": "w1mAgzw+VctgX0fmuuoFp7cBlGhj0D+aQ5fNnT7P9ywySYIC8GF8rq82ge4Wf/U7KNH78srjgCvOdFnx1akTGg==",
       "type": "package",
-      "path": "selenium.webdriver.chromedriver/71.0.3578.137",
+      "path": "selenium.webdriver.chromedriver/114.0.5735.1600",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "README.md",
+        "build/DefinePropertiesChromeDriver.targets",
         "build/Selenium.WebDriver.ChromeDriver.targets",
         "driver/linux64/chromedriver",
         "driver/mac64/chromedriver",
+        "driver/mac64arm/chromedriver",
         "driver/win32/chromedriver.exe",
-        "selenium.webdriver.chromedriver.71.0.3578.137.nupkg.sha512",
+        "nupkg-icon.png",
+        "selenium.webdriver.chromedriver.114.0.5735.1600.nupkg.sha512",
         "selenium.webdriver.chromedriver.nuspec"
       ]
     },
-    "System.Memory/4.5.4": {
-      "sha512": "1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw==",
+    "System.Drawing.Common/9.0.0": {
+      "sha512": "uoozjI3+dlgKh2onFJcz8aNLh6TRCPlLSh8Dbuljc8CdvqXrxHOVysJlrHvlsOCqceqGBR1wrMPxlnzzhynktw==",
       "type": "package",
-      "path": "system.memory/4.5.4",
+      "path": "system.drawing.common/9.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Drawing.Common.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Drawing.Common.targets",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net462/System.Drawing.Common.dll",
+        "lib/net462/System.Drawing.Common.pdb",
+        "lib/net462/System.Drawing.Common.xml",
+        "lib/net8.0/System.Drawing.Common.dll",
+        "lib/net8.0/System.Drawing.Common.pdb",
+        "lib/net8.0/System.Drawing.Common.xml",
+        "lib/net8.0/System.Private.Windows.Core.dll",
+        "lib/net8.0/System.Private.Windows.Core.xml",
+        "lib/net9.0/System.Drawing.Common.dll",
+        "lib/net9.0/System.Drawing.Common.pdb",
+        "lib/net9.0/System.Drawing.Common.xml",
+        "lib/net9.0/System.Private.Windows.Core.dll",
+        "lib/net9.0/System.Private.Windows.Core.xml",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.pdb",
+        "lib/netstandard2.0/System.Drawing.Common.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "system.drawing.common.9.0.0.nupkg.sha512",
+        "system.drawing.common.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.Memory/4.5.5": {
+      "sha512": "XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
+      "type": "package",
+      "path": "system.memory/4.5.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -215,7 +368,7 @@
         "lib/netstandard2.0/System.Memory.dll",
         "lib/netstandard2.0/System.Memory.xml",
         "ref/netcoreapp2.1/_._",
-        "system.memory.4.5.4.nupkg.sha512",
+        "system.memory.4.5.5.nupkg.sha512",
         "system.memory.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -323,10 +476,12 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
-      "OpenCvSharp4 >= 4.7.0",
-      "OpenCvSharp4.runtime.win >= 4.7.0",
+      "OpenCvSharp4 >= 4.7.0.20230410",
+      "OpenCvSharp4.runtime.win >= 4.7.0.20230415",
+      "Selenium.Support >= 4.27.0",
       "Selenium.WebDriver >= 4.27.0",
-      "Selenium.WebDriver.ChromeDriver >= 4.27.0",
+      "Selenium.WebDriver.ChromeDriver >= 114.0.5735.90",
+      "System.Drawing.Common >= 9.0.0",
       "Tesseract >= 5.2.0"
     ]
   },
@@ -336,11 +491,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\marti\\Code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectUniqueName": "c:\\Users\\marti\\allFolder\\code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
       "projectName": "ConsoleApp1",
-      "projectPath": "C:\\Users\\marti\\Code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectPath": "c:\\Users\\marti\\allFolder\\code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
       "packagesPath": "C:\\Users\\marti\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\marti\\Code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\obj\\",
+      "outputPath": "c:\\Users\\marti\\allFolder\\code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\marti\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -374,11 +529,15 @@
         "dependencies": {
           "OpenCvSharp4": {
             "target": "Package",
-            "version": "[4.7.0, )"
+            "version": "[4.7.0.20230410, )"
           },
           "OpenCvSharp4.runtime.win": {
             "target": "Package",
-            "version": "[4.7.0, )"
+            "version": "[4.7.0.20230415, )"
+          },
+          "Selenium.Support": {
+            "target": "Package",
+            "version": "[4.27.0, )"
           },
           "Selenium.WebDriver": {
             "target": "Package",
@@ -386,7 +545,11 @@
           },
           "Selenium.WebDriver.ChromeDriver": {
             "target": "Package",
-            "version": "[4.27.0, )"
+            "version": "[114.0.5735.90, )"
+          },
+          "System.Drawing.Common": {
+            "target": "Package",
+            "version": "[9.0.0, )"
           },
           "Tesseract": {
             "target": "Package",
@@ -409,7 +572,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.402/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
@@ -418,7 +581,7 @@
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "ConsoleApp1 depends on OpenCvSharp4 (>= 4.7.0) but OpenCvSharp4 4.7.0 was not found. An approximate best match of OpenCvSharp4 4.7.0.20230112 was resolved.",
+      "message": "ConsoleApp1 depends on OpenCvSharp4 (>= 4.7.0.20230410) but OpenCvSharp4 4.7.0.20230410 was not found. An approximate best match of OpenCvSharp4 4.8.0.20230708 was resolved.",
       "libraryId": "OpenCvSharp4",
       "targetGraphs": [
         "net8.0"
@@ -428,7 +591,7 @@
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "ConsoleApp1 depends on OpenCvSharp4.runtime.win (>= 4.7.0) but OpenCvSharp4.runtime.win 4.7.0 was not found. An approximate best match of OpenCvSharp4.runtime.win 4.7.0.20230115 was resolved.",
+      "message": "ConsoleApp1 depends on OpenCvSharp4.runtime.win (>= 4.7.0.20230415) but OpenCvSharp4.runtime.win 4.7.0.20230415 was not found. An approximate best match of OpenCvSharp4.runtime.win 4.8.0.20230708 was resolved.",
       "libraryId": "OpenCvSharp4.runtime.win",
       "targetGraphs": [
         "net8.0"
@@ -438,7 +601,7 @@
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "ConsoleApp1 depends on Selenium.WebDriver.ChromeDriver (>= 4.27.0) but Selenium.WebDriver.ChromeDriver 4.27.0 was not found. An approximate best match of Selenium.WebDriver.ChromeDriver 71.0.3578.137 was resolved.",
+      "message": "ConsoleApp1 depends on Selenium.WebDriver.ChromeDriver (>= 114.0.5735.90) but Selenium.WebDriver.ChromeDriver 114.0.5735.90 was not found. An approximate best match of Selenium.WebDriver.ChromeDriver 114.0.5735.1600 was resolved.",
       "libraryId": "Selenium.WebDriver.ChromeDriver",
       "targetGraphs": [
         "net8.0"
