@@ -46,6 +46,7 @@ artifacts/
 *.log
 logs/
 
+
 # Temporary files
 *.tmp
 *.bak
@@ -72,3 +73,6 @@ bul.traineddata
 # Other IDE-specific files
 *.idea/
 _ReSharper.Caches/
+
+#Ocr resource folder
+*.png
