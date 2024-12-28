@@ -3,7 +3,7 @@ using Tesseract;
 
 class OcrProcessor
 {
-    public static void ProcessImage(string tessDataPath, string imagePath)
+    public static string ProcessImage(string tessDataPath, string imagePath)
     {
         try
         {
@@ -23,12 +23,11 @@ class OcrProcessor
             Console.WriteLine($"OCR Confidence: {page.GetMeanConfidence()}");
 
             // Display extracted text
-            Console.WriteLine("Extracted Text:");
-            Console.WriteLine(text);
+            return text;
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Error during OCR: " + ex.Message);
+            return "Error during OCR: " + ex.Message;
         }
     }
 }

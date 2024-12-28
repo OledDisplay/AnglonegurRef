@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "OpLaNOaKLzk=",
+  "dgSpecHash": "CVtoj7I1jww=",
   "success": true,
   "projectFilePath": "c:\\Users\\marti\\allFolder\\code\\AnglonegurRef\\FrenskiBot\\ConsoleApp1\\ConsoleApp1.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\marti\\.nuget\\packages\\dotnetseleniumextras.waithelpers\\3.11.0\\dotnetseleniumextras.waithelpers.3.11.0.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\microsoft.win32.systemevents\\9.0.0\\microsoft.win32.systemevents.9.0.0.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\opencvsharp4\\4.8.0.20230708\\opencvsharp4.4.8.0.20230708.nupkg.sha512",
     "C:\\Users\\marti\\.nuget\\packages\\opencvsharp4.runtime.win\\4.8.0.20230708\\opencvsharp4.runtime.win.4.8.0.20230708.nupkg.sha512",

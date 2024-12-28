@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("tempCodeRunnerFile")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f899f5a9002fdcb1118c19505050207252edc0bb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5188962b4385098acdf5099a9678e9084fa90f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("tempCodeRunnerFile")]
 [assembly: System.Reflection.AssemblyTitleAttribute("tempCodeRunnerFile")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

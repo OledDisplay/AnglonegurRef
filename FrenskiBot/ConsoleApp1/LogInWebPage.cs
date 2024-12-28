@@ -1,14 +1,17 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Support;
 using System;
+using System.Linq;
+using OpenQA.Selenium.DevTools.V129.Debugger;
 
 class LogInWebPage
 {
     public static void LogIn(string targetUrl,string username,string password, IWebDriver driver)
     {
 
-        // vars
+        if(driver.Url.Contains("free-book")) return;
 
         // Go to main page link 
         driver.Navigate().GoToUrl(targetUrl);
@@ -26,7 +29,6 @@ class LogInWebPage
         {
             Console.WriteLine("No redirection detected within the timeout period.");
         }
-
         IWebElement usernameField = wait.Until(d => d.FindElement(By.CssSelector("[formcontrolname='email']"))); // Replace "username" with the actual name/id
         IWebElement passwordField = wait.Until(d => d.FindElement(By.CssSelector("[formcontrolname='password']"))); // password element - (formcontrol name found in inspect OuterHTML)
         IWebElement loginButton = driver.FindElement(By.Id("login-btn")); // Log in button id, found when ispecting
@@ -40,5 +42,19 @@ class LogInWebPage
         // Confirm successful login (optional)
         wait.Until(d => d.Url.Contains("free-book"));
         Console.WriteLine("Successfully logged in!");
+
+
+        // Close popup
+        try
+        {
+         wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
+         IWebElement Popup = wait.Until(d => d.FindElement(By.CssSelector(".introjs-skipbutton")));
+         Popup.Click();
+        }
+         catch (WebDriverTimeoutException)
+        {
+         return;
+        }
+
     }
 }

@@ -34,3 +34,4 @@ c:\Users\marti\allFolder\code\AnglonegurRef\FrenskiBot\ConsoleApp1\obj\Debug\net
 c:\Users\marti\allFolder\code\AnglonegurRef\FrenskiBot\ConsoleApp1\obj\Debug\net8.0\tempCodeRunnerFile.pdb
 c:\Users\marti\allFolder\code\AnglonegurRef\FrenskiBot\ConsoleApp1\obj\Debug\net8.0\tempCodeRunnerFile.genruntimeconfig.cache
 c:\Users\marti\allFolder\code\AnglonegurRef\FrenskiBot\ConsoleApp1\obj\Debug\net8.0\ref\tempCodeRunnerFile.dll
+c:\Users\marti\allFolder\code\AnglonegurRef\FrenskiBot\ConsoleApp1\bin\Debug\net8.0\SeleniumExtras.WaitHelpers.dll

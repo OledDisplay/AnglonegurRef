@@ -2,10 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using OpenQA.Selenium.DevTools;
 
 class Program
 {
+    public static string projectDir = AppContext.BaseDirectory; // Use BaseDirectory for consistent path
+    public static string tessDataPath = Path.Combine(projectDir, "tessdata");
     static void Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -13,7 +16,6 @@ class Program
         string lang = "bul"; // language tesData
 
         // Paths
-        string projectDir = AppContext.BaseDirectory; // Use BaseDirectory for consistent path
         string nugetPath = Path.Combine(projectDir, "nuget.exe");
         string projectFile = Path.Combine(AppContext.BaseDirectory, "ConsoleApp1.csproj"); // csproj folder name
         string tessDataPath = Path.Combine(projectDir, "tessdata");
@@ -21,8 +23,8 @@ class Program
 
         // Ocr image paths
         string projectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
-        string imageFolder = Path.Combine(projectRoot, "Test");
-        string imagePath = Path.Combine(imageFolder, "Test2.png");
+        string imageFolder = Path.Combine(projectRoot, "Uchebnik");
+        string imagePath = Path.Combine(imageFolder, "");
 
         //Download web page
         string url = "https://bg.e-prosveta.bg/free-book/399?page="; // Site url
@@ -94,7 +96,7 @@ class Program
         try
         {
             Console.WriteLine("Starting OCR...");
-            OcrProcessor.ProcessImage(tessDataPath, prossesedPath);
+            Console.WriteLine(OcrProcessor.ProcessImage(tessDataPath, prossesedPath));
             Console.WriteLine("OCR Completed.");
         }
         catch (Exception ex)
