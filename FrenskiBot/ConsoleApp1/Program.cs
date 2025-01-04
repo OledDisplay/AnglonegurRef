@@ -7,6 +7,7 @@ using OpenQA.Selenium.DevTools;
 
 class Program
 {
+    public static string output;
     public static string projectDir = AppContext.BaseDirectory; // Use BaseDirectory for consistent path
     public static string tessDataPath = Path.Combine(projectDir, "tessdata");
     static void Main()
@@ -84,25 +85,41 @@ class Program
         {
             Console.WriteLine($"Error during NuGet restore: {ex.Message}");
         }
+        // User input 
+        int urok;
+        int DownloadTextbook = 1;
+        Console.WriteLine("Format Y/N for questions..\nServer access?:");
+        if(Console.ReadLine() == "Y") {
+         DownloadTextbook = 0;
+        }
+        do {
+          Console.WriteLine("Enter urok num > 1, int:");
+        }
+        while (!int.TryParse(Console.ReadLine(), out urok) && urok < 2);
 
         // Get png from webpage
-        DownloadInfoScript.DownloadScript(url,projectRoot, LogName, LogPass); // url to textbook page,project root,LoginName,LoginPass
+        DownloadInfoScript.DownloadScript(url,projectRoot, LogName, LogPass, urok,DownloadTextbook); // url to textbook page,project root,LoginName,LoginPass
 
-        // Call image post - prosses
-        string prossesedPath = Path.Combine(imageFolder,Path.GetFileNameWithoutExtension(imagePath) + "Processed" + Path.GetExtension(imagePath));
-        ImageProcessor.ProcessImage(imagePath,prossesedPath);
+        for(int i = 0;i < 2; i++ ) {
+         imagePath = Path.Combine(imageFolder, $"{urok}",$"pishki{i}.png");
+         // Call image post - prosses
+         string prossesedPath = Path.Combine(imageFolder,Path.GetFileNameWithoutExtension(imagePath) + "Processed" + Path.GetExtension(imagePath));
+         ImageProcessor.ProcessImage(imagePath,prossesedPath);
 
-        // Call OCR functionality
-        try
-        {
+         // Call OCR functionality
+         try
+         {
             Console.WriteLine("Starting OCR...");
-            Console.WriteLine(OcrProcessor.ProcessImage(tessDataPath, prossesedPath));
+            output += "\n" +OcrProcessor.ProcessImage(tessDataPath, prossesedPath);
             Console.WriteLine("OCR Completed.");
-        }
-        catch (Exception ex)
-        {
+         }
+         catch (Exception ex)
+         {
             Console.WriteLine($"Error during OCR: {ex.Message}");
+         }
         }
+
+        Console.WriteLine(output);
     }
 
     private static void DownloadFile(string url, string savePath)

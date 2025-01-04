@@ -32,7 +32,7 @@ class ScreenshotScript
                 var children = mainElement.FindElements(By.CssSelector("*"));
                 var visibleChildren = children.Where(child => child.Displayed).ToList();
                 Console.WriteLine($"Visible children count: {visibleChildren.Count}");
-                return visibleChildren.Count > 20; // Ensure at least some visible children exist
+                return visibleChildren.Count > 10; // Ensure at least some visible children exist
             });
 
             if (allVisibleChildrenLoaded)
@@ -48,7 +48,12 @@ class ScreenshotScript
                 // Extract Num
                 int num = ExtractNumberFromElement(driver, themeXpath, themeXpathOR); // -1 for error, meaning the page has to be skipped
                 if (num == -1) return -2;
-                Console.WriteLine($"num: {num}");
+
+                // close popup for better ocr
+                if(driver.FindElements(By.CssSelector(".introjs-skipbutton")).Count > 0) {
+                 IWebElement popup = driver.FindElement(By.CssSelector(".introjs-skipbutton"));
+                 popup.Click();
+                }
 
                 // Get Device Pixel Ratio for scaling
                 IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)driver;
@@ -107,8 +112,8 @@ class ScreenshotScript
         ChromeOptions options = new ChromeOptions();
         options.AddArgument("--headless");
         options.AddArgument("--disable-gpu");
-        options.AddArgument("--window-size=1920x1080");
         options.AddArgument("--disable-extensions");
+        options.AddArgument("--window-size=1920x1080");
         options.AddArgument("--no-sandbox");
         options.AddArgument("--disable-dev-shm-usage");
 

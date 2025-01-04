@@ -1,6 +1,9 @@
 # Ignore everything in the bin folder
 bin/*
 
+#Uchebnik temp folder
+Uchebnik/
+
 # Except nuget.exe
 !bin/nuget.exe
 

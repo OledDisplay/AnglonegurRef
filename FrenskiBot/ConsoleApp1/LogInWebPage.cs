@@ -11,8 +11,6 @@ class LogInWebPage
     public static void LogIn(string targetUrl,string username,string password, IWebDriver driver)
     {
 
-        if(driver.Url.Contains("free-book")) return;
-
         // Go to main page link 
         driver.Navigate().GoToUrl(targetUrl);
 
@@ -42,19 +40,5 @@ class LogInWebPage
         // Confirm successful login (optional)
         wait.Until(d => d.Url.Contains("free-book"));
         Console.WriteLine("Successfully logged in!");
-
-
-        // Close popup
-        try
-        {
-         wait = new WebDriverWait(driver, TimeSpan.FromSeconds(3));
-         IWebElement Popup = wait.Until(d => d.FindElement(By.CssSelector(".introjs-skipbutton")));
-         Popup.Click();
-        }
-         catch (WebDriverTimeoutException)
-        {
-         return;
-        }
-
     }
 }
