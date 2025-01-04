@@ -4,6 +4,9 @@ bin/*
 #Uchebnik temp folder
 Uchebnik/
 
+#Writing materials
+ConspectusPackage/Materials/
+
 # Except nuget.exe
 !bin/nuget.exe
 

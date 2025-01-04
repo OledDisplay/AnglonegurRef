@@ -1,0 +1,25 @@
+In general gpt responds better to english so use that
+
+Input the original message, then in a number of prompts start inputting the conspectus materials.
+
+Start by running the csproj file and inputting the lesson number for the conspectus. It's gonna return the text from that lesson in full.
+
+Prompt gpt with something like "Ето инфомарцията за писане:"
+and the text under.
+
+Prompt gpt with the plan from google classroom; Use something like : "Ето плана. Не променяй и не добавяй точки в никакъв случай. Игнорирай задачите. Не започвай да пишеш, защото не съм ти дал всички материали:"
+
+Prompt gpt with previous texts of your creation, starting with something like "ПРИМЕРЕН КОНСПЕКТ, ЗАПОМНИ ГО, НЕ ПИШИ НИЩО:"
+
+
+Finish with "Напиши коснпекта, спрямо материалите, които съм ти дал."
+
+If you have things you do not like about the conspectus, ask gpt to rewrite it, changing the bad parts. Remind it to reference the original prompt and materials before writing.
+
+If you have extra tasks regarding the lesson, you can find a picture of it int ConsoleApp1\Uchebnik\'number of your lesson' to input to gpt and ask questions about.
+
+List of prompt starters to use
+Ето инфомарцията за писане:
+Ето плана. Не променяй и не добавяй точки в никакъв случай. Игнорирай задачите. Не започвай да пишеш, защото не съм ти дал всички материали:
+ПРИМЕРЕН КОНСПЕКТ, ЗАПОМНИ ГО, НЕ ПИШИ НИЩО:
+Напиши коснпекта, спрямо материалите, които съм ти дал.
