@@ -2,6 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using OpenQA.Selenium.DevTools;
 
@@ -10,12 +13,16 @@ class Program
     public static string output;
     public static string projectDir = AppContext.BaseDirectory; // Use BaseDirectory for consistent path
     public static string tessDataPath = Path.Combine(projectDir, "tessdata");
-    static void Main()
+    string textbookPath = Path.Combine(projectDir,"plant.txt");
+    static async Task Main()
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
 
         string lang = "bul"; // language tesData
 
+                SynopsisGenerator generator = new SynopsisGenerator();
+
+        
         // Paths
         string nugetPath = Path.Combine(projectDir, "nuget.exe");
         string projectFile = Path.Combine(AppContext.BaseDirectory, "ConsoleApp1.csproj"); // csproj folder name
@@ -117,9 +124,18 @@ class Program
          {
             Console.WriteLine($"Error during OCR: {ex.Message}");
          }
+         
         }
 
         Console.WriteLine(output);
+        string plan = File.ReadAllText(Path.Combine(projectRoot,"plan.txt"));
+        string info = output;
+        string writingStyle = File.ReadAllText(Path.Combine(projectRoot,"writingstyle.txt"));
+
+        string synopsis = await generator.GenerateSynopsis(plan, info, writingStyle);
+        Console.WriteLine("Generated Synopsis:");
+        Console.WriteLine(synopsis);
+
     }
 
     private static void DownloadFile(string url, string savePath)

@@ -29,7 +29,7 @@ class DownloadInfoScript
             return;
         }
       
-        // Close driver upon the program crashing to prevent a resource leak
+        // Close driver upon the program crashing to prevent a resource Leaks
         AppDomain.CurrentDomain.ProcessExit += (s, e) =>
         {
          CleanupDriver();

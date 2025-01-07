@@ -8,6 +8,7 @@ using System.IO;
 using System.Drawing;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 class ScreenshotScript
 {
@@ -53,6 +54,7 @@ class ScreenshotScript
                 if(driver.FindElements(By.CssSelector(".introjs-skipbutton")).Count > 0) {
                  IWebElement popup = driver.FindElement(By.CssSelector(".introjs-skipbutton"));
                  popup.Click();
+                 Thread.Sleep(100);
                 }
 
                 // Get Device Pixel Ratio for scaling
@@ -110,14 +112,24 @@ class ScreenshotScript
     public static IWebDriver GetHeadlessChromeDriver()
     {
         ChromeOptions options = new ChromeOptions();
-        options.AddArgument("--headless");
-        options.AddArgument("--disable-gpu");
+        options.AddArgument("--headless"); 
+        options.AddArgument("--disable-software-rasterizer");
+        options.AddArgument("--enable-gpu");
         options.AddArgument("--disable-extensions");
         options.AddArgument("--window-size=1920x1080");
         options.AddArgument("--no-sandbox");
         options.AddArgument("--disable-dev-shm-usage");
+        options.AddArgument("--disable-blink-features=AutomationControlled");
+        options.AddArgument("--force-device-scale-factor=1");
+        options.AddArgument("--max-texture-size=8192"); // Increases the allowed texture size for rendering
 
-        return new ChromeDriver(options);
+
+        IWebDriver driver =  new ChromeDriver(options);
+
+        // Forcefully set the window size
+        driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
+
+        return driver;
     }
 
     public static int ExtractNumberFromElement(IWebDriver driver, object childClass, List<string> childOrClass)

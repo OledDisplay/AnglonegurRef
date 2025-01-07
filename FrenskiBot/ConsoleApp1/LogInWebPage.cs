@@ -38,7 +38,7 @@ class LogInWebPage
         loginButton.Click();
 
         // Confirm successful login (optional)
-        wait.Until(d => d.Url.Contains("free-book"));
+        wait.Until(d => d.Url.Contains("399?page=")); // exclusive part of the loaded site url
         Console.WriteLine("Successfully logged in!");
     }
 }
