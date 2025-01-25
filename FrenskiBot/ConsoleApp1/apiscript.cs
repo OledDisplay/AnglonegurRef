@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 public class Apiscript
 {
-    private static readonly string ApiKey = "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"; // Replace with your actual key
+    private static readonly string ApiKey = ""; // Replace with your actual key
     private static readonly string ApiUrl = "https://api.openai.com/v1/chat/completions";
     private const int BytesPerToken = 4;
 

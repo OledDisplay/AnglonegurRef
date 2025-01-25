@@ -39,8 +39,8 @@ class Program
 
         //Download web page
         string url = "https://bg.e-prosveta.bg/free-book/399?page="; // Site url
-        string LogName = "jmatrozova@abv.bg";
-        string LogPass = "parisjm1603";
+        string LogName = "";
+        string LogPass = "";
 
                          
         
