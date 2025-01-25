@@ -7,6 +7,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using OpenQA.Selenium.DevTools;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 class Program
 {
@@ -20,9 +23,9 @@ class Program
 
         string lang = "bul"; // language tesData
 
-                SynopsisGenerator generator = new SynopsisGenerator();
+                Apiscript generator = new Apiscript();
+   
 
-        
         // Paths
         string nugetPath = Path.Combine(projectDir, "nuget.exe");
         string projectFile = Path.Combine(AppContext.BaseDirectory, "ConsoleApp1.csproj"); // csproj folder name
@@ -38,6 +41,8 @@ class Program
         string url = "https://bg.e-prosveta.bg/free-book/399?page="; // Site url
         string LogName = "jmatrozova@abv.bg";
         string LogPass = "parisjm1603";
+
+                         
         
         // Ensure tessdata folder exists
         if (!Directory.Exists(tessDataPath))
@@ -95,7 +100,7 @@ class Program
         // User input 
         int urok;
         int DownloadTextbook = 1;
-        Console.WriteLine("Format Y/N for questions..\nServer access?:");
+        Console.WriteLine("Format Y/N for questions..\nDownload dynamicly or use local download?:");
         if(Console.ReadLine() == "Y") {
          DownloadTextbook = 0;
         }
@@ -127,13 +132,54 @@ class Program
          
         }
 
-        Console.WriteLine(output);
-        string plan = File.ReadAllText(Path.Combine(projectRoot,"plan.txt"));
-        string info = output;
-        string writingStyle = File.ReadAllText(Path.Combine(projectRoot,"writingstyle.txt"));
+        // Remove empty spaces from ocr-d text
+        string cleanedText = string.Join("\n", output
+            .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+            .Select(line => line.Trim()) // Trim spaces around the lines
+            .Where(line => !string.IsNullOrEmpty(line))); // Ensure non-empty lines
 
-        string synopsis = await generator.GenerateSynopsis(plan, info, writingStyle);
-        Console.WriteLine("Generated Synopsis:");
+
+        Console.WriteLine(cleanedText);
+        
+        //Set paths for api
+        string apiFolder = Path.Combine(projectRoot, "ApiMaterialsProg");
+        string plan = File.ReadAllText(Path.Combine(apiFolder,"plan.txt"));
+        string info = output;//File.ReadAllText(Path.Combine(projectRoot,"testbook.txt"));
+        string writingNotes= File.ReadAllText(Path.Combine(apiFolder,"ExtraWritingStyleNotes.txt"));
+        List<string> finalPropmt = Apiscript.SplitIntoChunks(info,2000);
+        
+    
+        // Writing style folder
+        string wrStyleFolder = Path.Combine(projectRoot,"WritingStyle");
+        Directory.CreateDirectory(wrStyleFolder);
+
+        
+        // Check for writing style json and extract writing style
+        do {
+            Console.WriteLine("Check if writing style folder contains example text files. If not, add some! Confirm with input ");
+        }
+        while(Console.ReadLine() == "" && Directory.GetFiles(wrStyleFolder).Length == 0);
+        switch(File.Exists(Path.Combine(wrStyleFolder,"writingstyle.txt")) ? 1: 0) {
+            case 1:
+             Console.WriteLine("Writing style file prescent. Replace with current example text? Y/N:");
+             if(Console.ReadLine() == "Y") File.Delete(Path.Combine(wrStyleFolder,"writingstyle.txt"));
+             else break;
+             goto default;
+             
+            default:
+             string WritingStyleBulk = "";
+             string[] files = Directory.GetFiles(wrStyleFolder);
+             for(int i = 0; i < files.Length; i++ ) {
+              WritingStyleBulk += File.ReadAllText(Path.Combine(wrStyleFolder, files[i]));
+             }
+             await AnalyzeScript.SaveWrStyle(WritingStyleBulk,Path.Combine(wrStyleFolder,"writingstyle.txt"),Path.Combine(apiFolder,"WritingStyleInputDes.txt"));
+             break;
+        }
+        
+        string wrStyleContent = File.ReadAllText(Path.Combine(apiFolder,"WritingStyleInputDes.txt"));
+        Console.WriteLine("Enter conspectus size in words, int:");;
+        string synopsis = await Apiscript.GenerateSynopsis(finalPropmt,plan,wrStyleContent,Console.ReadLine(),writingNotes); // info text,writing style,conspectus size, extra writing notes
+        Console.WriteLine("\n\nGenerated Conspectus:");
         Console.WriteLine(synopsis);
 
     }

@@ -23,9 +23,9 @@ class DownloadInfoScript
 
     public static void DownloadScript(string pageUrl, string root, string LoginName, string LoginPass, int urok, int RunLoop)
     {
-        if (File.Exists("Uchebnik\\Data.flag"))
+        if (File.Exists("Uchebnik\\Data.flag")  || Directory.Exists($"Uchebnik\\{urok}")) // add flag for downloadiing for second condition
         {
-            Console.WriteLine("Textbook present");
+            Console.WriteLine("Local download found. Ps");
             return;
         }
       
