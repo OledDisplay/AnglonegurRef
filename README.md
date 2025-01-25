@@ -1,5 +1,6 @@
 Frenskibot isa program that writes conspectuses based on the Prosveta history book.
 Materials to generate conspectuses without the use of this program are included in this dev build.
+This is a dev build, so debugging info will be outputted in the terminal while generating.
 
 Usage guide:
 In orther to combat the device limit on the Prosveta site, the program is build to extract the whole textbook in one sitting (to be contained localy), so find time to do that upon initial usage.
@@ -15,6 +16,6 @@ At this process you should setup your generation folder. Open ApiMaterialsProg\.
 You will also have to go the writing style folder and put at least one text file with an example conspectus or text you wrote that will be used to build the new conspectus (extraction of writing style)
 
 Confirm with any input that you've added an example text(s). You will be asked to submit a size (in words) for the conspectus.
-Fo
+Following that, the finished conspectus will be outputted in the terminal
 
 This is not the final build of the project, so the code doesn't contain notes, regarding ease of usage. On final release descriptive notes will allow easy addaptation to other textbooks.
