@@ -5,7 +5,7 @@ bin/*
 Uchebnik/
 
 #Writing materials
-ConspectusPackage/Materials/
+ConspectusPackageUser/
 
 # Except nuget.exe
 !bin/nuget.exe

@@ -136,7 +136,7 @@ class ScreenshotScript
     {
         try
         {
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(0.1));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(0.5));
 
             string xpath;
 
