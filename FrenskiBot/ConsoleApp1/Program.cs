@@ -36,6 +36,7 @@ class Program
         string projectRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..\\..\\..\\"));
         string imageFolder = Path.Combine(projectRoot, "Uchebnik");
         string imagePath = Path.Combine(imageFolder, "");
+        
 
         //Download web page
         string url = "https://bg.e-prosveta.bg/free-book/399?page="; // Site url
@@ -110,7 +111,7 @@ class Program
         while (!int.TryParse(Console.ReadLine(), out urok) && urok < 2);
 
         // Get png from webpage
-        DownloadInfoScript.DownloadScript(url,projectRoot, LogName, LogPass, urok,DownloadTextbook); // url to textbook page,project root,LoginName,LoginPass
+        await DownloadInfoScript.DownloadScript(url,projectRoot, LogName, LogPass, urok,DownloadTextbook); // url to textbook page,project root,LoginName,LoginPass
 
         for(int i = 0;i < 2; i++ ) {
          imagePath = Path.Combine(imageFolder, $"{urok}",$"pishki{i}.png");
@@ -130,7 +131,8 @@ class Program
             Console.WriteLine($"Error during OCR: {ex.Message}");
          }
          
-        }
+         }
+        
 
         // Remove empty spaces from ocr-d text
         string cleanedText = string.Join("\n", output
@@ -140,12 +142,22 @@ class Program
 
 
         Console.WriteLine(cleanedText);
+
         
         //Set paths for api
         string apiFolder = Path.Combine(projectRoot, "ApiMaterialsProg");
+        string DebugFolder = Path.Combine(projectRoot, "DebugOutputs");
+        string wrStyleContent = File.ReadAllText(Path.Combine(apiFolder,"APIwrstyle.txt"));
         string plan = File.ReadAllText(Path.Combine(apiFolder,"plan.txt"));
-        string info = output;//File.ReadAllText(Path.Combine(projectRoot,"testbook.txt"));
+        string InputSys = File.ReadAllText(Path.Combine(apiFolder,"InputSystem.txt"));
+        string InputUser = File.ReadAllText(Path.Combine(apiFolder,"InputUser.txt"));
         string writingNotes= File.ReadAllText(Path.Combine(apiFolder,"ExtraWritingStyleNotes.txt"));
+        string info = output;
+
+        string infoCleanDB = Path.Combine(DebugFolder,"CleanInfo.txt");
+        string infoSumDB = Path.Combine(DebugFolder,"info summarized.txt");
+        string conspecutsDB = Path.Combine(DebugFolder,"lastconspectus.txt");
+        string BulkDB = Path.Combine(DebugFolder,"WRstyleBulk.txt");
         List<string> finalPropmt = Apiscript.SplitIntoChunks(info,2000);
         
     
@@ -170,18 +182,42 @@ class Program
              string WritingStyleBulk = "";
              string[] files = Directory.GetFiles(wrStyleFolder);
              for(int i = 0; i < files.Length; i++ ) {
-              WritingStyleBulk += File.ReadAllText(Path.Combine(wrStyleFolder, files[i]));
+              if(Path.GetExtension(Path.Combine(wrStyleFolder, files[i])) != ".txt"){
+                 imagePath = Path.Combine(wrStyleFolder, files[i]);
+                 string prossesedPath = Path.Combine(wrStyleFolder,Path.GetFileNameWithoutExtension(files[i]) + "Processed" + Path.GetExtension(files[i]));
+                 ImageProcessor.ProcessImage(imagePath,prossesedPath);
+                try
+                {
+                    Console.WriteLine("Starting OCR...");
+                    WritingStyleBulk += OcrProcessor.ProcessImage(tessDataPath, prossesedPath);
+                    Console.WriteLine("OCR Completed.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error during OCR: {ex.Message}");
+                }
+                
+              }
+              else WritingStyleBulk += File.ReadAllText(Path.Combine(wrStyleFolder, files[i]));
              }
+             File.WriteAllText(BulkDB,WritingStyleBulk);
              await AnalyzeScript.SaveWrStyle(WritingStyleBulk,Path.Combine(wrStyleFolder,"writingstyle.txt"),Path.Combine(apiFolder,"WritingStyleInputDes.txt"));
              break;
         }
-        
-        string wrStyleContent = File.ReadAllText(Path.Combine(apiFolder,"WritingStyleInputDes.txt"));
-        Console.WriteLine("Enter conspectus size in words, int:");;
-        string synopsis = await Apiscript.GenerateSynopsis(finalPropmt,plan,wrStyleContent,Console.ReadLine(),writingNotes); // info text,writing style,conspectus size, extra writing notes
-        Console.WriteLine("\n\nGenerated Conspectus:");
-        Console.WriteLine(synopsis);
 
+        //summerization info text a little
+        Console.WriteLine("Cleaning up the text from the textbook...");
+        List<string> preprocessedChunks = await Apiscript.PreprocessChunks(finalPropmt);
+
+        Console.WriteLine("Enter conspectus size in CHARECTERS (1 word ~= 8 char):");;
+        string ApiOutput= await Apiscript.GenerateSynopsis(preprocessedChunks,plan,wrStyleContent,Console.ReadLine(),writingNotes,InputSys,InputUser); // info text,writing style,conspectus size, extra writing notes, input
+        Console.WriteLine("\n\nGenerated Conspectus:");
+        Console.WriteLine(ApiOutput);
+
+        //write to debug
+        File.WriteAllText(infoCleanDB,cleanedText);
+        File.WriteAllText(infoSumDB,string.Join("",preprocessedChunks));
+        File.WriteAllText(conspecutsDB,ApiOutput);
     }
 
     private static void DownloadFile(string url, string savePath)

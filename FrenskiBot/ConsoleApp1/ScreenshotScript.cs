@@ -8,6 +8,7 @@ using System.IO;
 using System.Drawing;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 
 class ScreenshotScript
@@ -18,89 +19,84 @@ class ScreenshotScript
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
 
-            // Wait for the main container to load
-            IWebElement mainElement = wait.Until(d =>
-            {
-                var el = d.FindElement(By.CssSelector(".outer-pages-wrapper"));
-                return el.Displayed ? el : null;
-            });
+            // **Wait for the main container to load**
+            Stopwatch sw = Stopwatch.StartNew();
+            IWebElement mainElement = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(".outer-pages-wrapper")));
+            Console.WriteLine($"Main element loaded in {sw.ElapsedMilliseconds} ms");
 
-            Console.WriteLine("Main element loaded.");
-
-            // Wait until visible children of the main container are loaded
+            // **Wait for all child elements to be fully loaded & visible**
             bool allVisibleChildrenLoaded = wait.Until(d =>
             {
                 var children = mainElement.FindElements(By.CssSelector("*"));
                 var visibleChildren = children.Where(child => child.Displayed).ToList();
                 Console.WriteLine($"Visible children count: {visibleChildren.Count}");
-                return visibleChildren.Count > 10; // Ensure at least some visible children exist
+                return visibleChildren.Count > 5; // Ensure at least 10 elements are visible
             });
 
-            if (allVisibleChildrenLoaded)
+            if (!allVisibleChildrenLoaded)
             {
-                // Extract MaxPage
-                if (DownloadInfoScript.MaxPage == 0)
+                Console.WriteLine("Not all children loaded.");
+                return -1;
+            }
+
+            // Extract MaxPage
+            if (DownloadInfoScript.MaxPage == 0)
+            {
+                int maxPage = ExtractNumberFromElement(driver, "//*[@fxhide.lt-sm]", null);
+                Console.WriteLine($"Current MaxPage: {maxPage}");
+                DownloadInfoScript.MaxPage = maxPage;
+            }
+
+            // Extract Num
+            int num = ExtractNumberFromElement(driver, themeXpath, themeXpathOR);
+            if (num == -1) return -2;
+
+            // Close popup for better OCR
+            var popups = driver.FindElements(By.CssSelector(".introjs-skipbutton"));
+            if (popups.Count > 0)
+            {
+                popups[0].Click();
+                Thread.Sleep(100); // Keeping your sleep timing
+            }
+
+            // **Ensure all elements in main container are fully rendered before taking the screenshot**
+            wait.Until(ExpectedConditions.ElementExists(By.TagName("body")));
+
+            // **Get Device Pixel Ratio for scaling**
+            IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)driver;
+            double devicePixelRatio = Convert.ToDouble(jsExecutor.ExecuteScript("return window.devicePixelRatio;"));
+
+            var elementLocation = mainElement.Location;
+            var elementSize = mainElement.Size;
+
+            int adjustedX = (int)(elementLocation.X * devicePixelRatio);
+            int adjustedY = (int)(elementLocation.Y * devicePixelRatio);
+            int adjustedWidth = (int)(elementSize.Width * devicePixelRatio);
+            int adjustedHeight = (int)(elementSize.Height * devicePixelRatio);
+
+            // **Take full-page screenshot**
+            Screenshot fullScreenshot = ((ITakesScreenshot)driver).GetScreenshot();
+            string tempPath = Path.Combine(AppContext.BaseDirectory, "tempScreenshot.png");
+            fullScreenshot.SaveAsFile(tempPath);
+
+            // **Crop the screenshot to capture only the required area**
+            var cropArea = new Rectangle(adjustedX, adjustedY, adjustedWidth, adjustedHeight);
+
+            using (var fullImage = new Bitmap(tempPath))
+            {
+                cropArea.Width = Math.Min(cropArea.Width, fullImage.Width - cropArea.X);
+                cropArea.Height = Math.Min(cropArea.Height, fullImage.Height - cropArea.Y);
+
+                using (var croppedImage = fullImage.Clone(cropArea, fullImage.PixelFormat))
                 {
-                    int maxPage = ExtractNumberFromElement(driver, "//*[@fxhide.lt-sm]", null);
-                    Console.WriteLine($"Current MaxPage: {maxPage}");
-                    DownloadInfoScript.MaxPage = maxPage;
-                }
-
-                // Extract Num
-                int num = ExtractNumberFromElement(driver, themeXpath, themeXpathOR); // -1 for error, meaning the page has to be skipped
-                if (num == -1) return -2;
-
-                // close popup for better ocr
-                if(driver.FindElements(By.CssSelector(".introjs-skipbutton")).Count > 0) {
-                 IWebElement popup = driver.FindElement(By.CssSelector(".introjs-skipbutton"));
-                 popup.Click();
-                 Thread.Sleep(100);
-                }
-
-                // Get Device Pixel Ratio for scaling
-                IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)driver;
-                double devicePixelRatio = Convert.ToDouble(jsExecutor.ExecuteScript("return window.devicePixelRatio;"));
-
-                var elementLocation = mainElement.Location;
-                var elementSize = mainElement.Size;
-
-                int adjustedX = (int)(elementLocation.X * devicePixelRatio);
-                int adjustedY = (int)(elementLocation.Y * devicePixelRatio);
-                int adjustedWidth = (int)(elementSize.Width * devicePixelRatio);
-                int adjustedHeight = (int)(elementSize.Height * devicePixelRatio);
-
-                Screenshot fullScreenshot = ((ITakesScreenshot)driver).GetScreenshot();
-                string tempPath = Path.Combine(AppContext.BaseDirectory, "tempScreenshot.png");
-                fullScreenshot.SaveAsFile(tempPath);
-
-                var cropArea = new Rectangle(adjustedX, adjustedY, adjustedWidth, adjustedHeight);
-
-                using (var fullImage = new Bitmap(tempPath))
-                {
-                    cropArea.Width = Math.Min(cropArea.Width, fullImage.Width - cropArea.X);
-                    cropArea.Height = Math.Min(cropArea.Height, fullImage.Height - cropArea.Y);
-
-                    using (var croppedImage = fullImage.Clone(cropArea, fullImage.PixelFormat))
-                    {
-                        croppedImage.Save(savePath);
-                        Console.WriteLine($"Cropped screenshot saved at: {savePath}");
-                    }
-                }
-
-                File.Delete(tempPath);
-
-                if (num <= DownloadInfoScript.MaxPage)
-                {
-                    return num;
-                }
-                else
-                {
-                    return 0;
+                    croppedImage.Save(savePath);
+                    Console.WriteLine($"Cropped screenshot saved at: {savePath}");
                 }
             }
 
-            Console.WriteLine("Visible children not loaded.");
-            return -1;
+            File.Delete(tempPath);
+
+            return num <= DownloadInfoScript.MaxPage ? num : 0;
         }
         catch (Exception ex)
         {
@@ -109,28 +105,32 @@ class ScreenshotScript
         }
     }
 
-    public static IWebDriver GetHeadlessChromeDriver()
-    {
-        ChromeOptions options = new ChromeOptions();
-        options.AddArgument("--headless"); 
-        options.AddArgument("--disable-software-rasterizer");
-        options.AddArgument("--enable-gpu");
-        options.AddArgument("--disable-extensions");
-        options.AddArgument("--window-size=1920x1080");
-        options.AddArgument("--no-sandbox");
-        options.AddArgument("--disable-dev-shm-usage");
-        options.AddArgument("--disable-blink-features=AutomationControlled");
-        options.AddArgument("--force-device-scale-factor=1");
-        options.AddArgument("--max-texture-size=8192"); // Increases the allowed texture size for rendering
+public static IWebDriver GetHeadlessChromeDriver()
+{
+    ChromeOptions options = new ChromeOptions();
+    options.AddArgument("--headless=new"); // NEW headless mode (fixes viewport issues)
+    options.AddArgument("--disable-software-rasterizer");
+    options.AddArgument("--enable-gpu");
+    options.AddArgument("--disable-extensions");
+    options.AddArgument("--window-size=1920x1080");
+    options.AddArgument("--start-maximized"); 
+    options.AddArgument("--force-device-scale-factor=1");
+    options.AddArgument("--max-texture-size=8192");
+    options.AddArgument("--no-sandbox");
+    options.AddArgument("--disable-dev-shm-usage");
+    options.AddArgument("--disable-blink-features=AutomationControlled");
 
+    IWebDriver driver = new ChromeDriver(options);
 
-        IWebDriver driver =  new ChromeDriver(options);
+    // Force correct viewport size using DevTools
+    IJavaScriptExecutor jsExecutor = (IJavaScriptExecutor)driver;
+    jsExecutor.ExecuteScript("document.body.style.zoom='100%'");
 
-        // Forcefully set the window size
-        driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
+    // **Ensure the window is maximized properly**
+    driver.Manage().Window.Size = new System.Drawing.Size(1920, 1080);
 
-        return driver;
-    }
+    return driver;
+}
 
     public static int ExtractNumberFromElement(IWebDriver driver, object childClass, List<string> childOrClass)
     {
@@ -139,16 +139,14 @@ class ScreenshotScript
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(0.5));
 
             string xpath;
-
-            // Build XPath dynamically
             if (childClass is string singleClass)
             {
                 xpath = singleClass;
             }
             else if (childClass is List<string> classParts)
             {
-                string childConditions = string.Join(" and ", classParts.Select(part => $"contains(@class, '{part}')")); // Nessesary condtions
-                string orConditions = string.Join(" or ", childOrClass.Select(part => $"contains(@class, '{part}')")); // Or conditions
+                string childConditions = string.Join(" and ", classParts.Select(part => $"contains(@class, '{part}')"));
+                string orConditions = string.Join(" or ", childOrClass.Select(part => $"contains(@class, '{part}')"));
                 xpath = $"//*[{childConditions} and ({orConditions})]";
             }
             else
@@ -156,20 +154,11 @@ class ScreenshotScript
                 throw new ArgumentException("Invalid childClass argument.");
             }
 
-            // Locate the element
-            IWebElement element = wait.Until(d =>
-            {
-                var el = d.FindElement(By.XPath(xpath));
-                return el.Displayed ? el : null;
-            });
-
-
-            // Extract text
+            IWebElement element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
             string elementText = element.Text.Trim();
 
-            // Extract the number from the text
             string[] parts = elementText.Split(new[] { ' ', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            string numberPart = parts.Last(); // Extract the number
+            string numberPart = parts.Last();
             int extractedNumber = int.Parse(numberPart);
 
             Console.WriteLine($"Extracted Number: {extractedNumber}");

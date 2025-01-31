@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public class AnalyzeScript
 {
-    private static readonly string ApiKey = "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"; // Replace with your actual API key
+    private static readonly string ApiKey = ""; // Replace with your actual API key
     private static readonly string ApiUrl = "https://api.openai.com/v1/chat/completions";
     private const int BytesPerToken = 4;
     private const int MaxTokensPerChunk = 2000; // Maximum tokens per chunk
@@ -46,7 +46,7 @@ public class AnalyzeScript
         {
             model = "gpt-4o",
             messages = finalMessages,
-            max_tokens = 3000, // Reserve space for response tokens
+            max_tokens = 4000, // Reserve space for response tokens
             temperature = 0.7,
             presence_penalty = 0.6,
             frequency_penalty = 0.3

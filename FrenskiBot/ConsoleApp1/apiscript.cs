@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 public class Apiscript
 {
-    private static readonly string ApiKey = "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"; // Replace with your actual key
+    private static readonly string ApiKey = ""; // Replace with your actual key
     private static readonly string ApiUrl = "https://api.openai.com/v1/chat/completions";
     private const int BytesPerToken = 4;
 
+    // Dynamically split the input into manageable chunks based on token size
     public static List<string> SplitIntoChunks(string input, int maxTokens)
     {
         int maxBytes = maxTokens * BytesPerToken;
@@ -45,78 +46,139 @@ public class Apiscript
         return chunks;
     }
 
-    public static async Task<string> GenerateSynopsis(List<string> infoChunks, string plan, string writingStyle, string size, string extraNotes)
-{
-    try
+    // Preprocess the chunks to remove filler words and summarize relevant information
+    public static async Task<List<string>> PreprocessChunks(List<string> infoChunks)
     {
+        List<string> processedChunks = new List<string>();
         using HttpClient client = new HttpClient();
-
-        var finalMessages = new List<object>
-        {
-            new
-            {
-                role = "system",
-                content = "You are tasked with creating a detailed conspectus based on the provided plan, writing style, and example texts. Follow the plan strictly, expanding each point with 2–3 detailed dashes under each bullet point. The conspectus must be {size} words (±10 words) and follow the provided example texts' structure and style. Use Bulgarian language and follow the language level of provided by the writing style."
-            },
-            new
-            {
-                role = "user",
-                content = $"Plan:\n{plan}\n\nWriting style:\n{writingStyle}\n\nExtra writing notes to keep in mind:\n{extraNotes}\n\nGenerate a detailed conspectus strictly following the plan. Expand all points fully and make it exaclty {size} words in size(a bigger size would mean more in depth information)."
-            }
-        };
 
         foreach (string chunk in infoChunks)
         {
-            finalMessages.Add(new
+            var messages = new List<object>
             {
-                role = "user",
-                content = $"Here is part of the information:\n{chunk}"
-            });
+                new
+                {
+                    role = "system",
+                    content = "You are tasked with cleaning up the provided text. It will contain some gibberish and filler words. YOU HAVE should keep the original info, but you can rewrite parts that are barley understandable and should summarize long parts, keeping the original depth and crucial examples."
+                },
+                new
+                {
+                    role = "user",
+                    content = $"Here is the text to preprocess:\n{chunk}\n\nClean up this text without removing any information"
+                }
+            };
+
+            var requestBody = new
+            {
+                model = "gpt-4o",
+                messages = messages,
+                max_tokens = 2048, // Adjust for each chunk
+                temperature = 0.5
+            };
+
+            string jsonBody = JsonSerializer.Serialize(requestBody);
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
+            {
+                Headers = { { "Authorization", $"Bearer {ApiKey}" } },
+                Content = new StringContent(jsonBody, Encoding.UTF8, "application/json")
+            };
+
+            HttpResponseMessage response = await client.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorDetails = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Error during preprocessing: {errorDetails}");
+                throw new Exception($"Error: {response.StatusCode}");
+            }
+
+            string responseContent = await response.Content.ReadAsStringAsync();
+            using JsonDocument doc = JsonDocument.Parse(responseContent);
+            string processedText = doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+            processedChunks.Add(processedText);
         }
 
-        var finalRequestBody = new
-        {
-            model = "gpt-4o",
-            messages = finalMessages,
-            max_tokens = 15000,
-            temperature = 0.6,
-            presence_penalty = 0.6,
-            frequency_penalty = 0.3
-        };
-
-        string jsonFinalBody = JsonSerializer.Serialize(finalRequestBody);
-
-        HttpRequestMessage finalRequest = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
-        {
-            Headers = { { "Authorization", $"Bearer {ApiKey}" } },
-            Content = new StringContent(jsonFinalBody, Encoding.UTF8, "application/json")
-        };
-
-        HttpResponseMessage finalResponse = await client.SendAsync(finalRequest);
-
-        if (!finalResponse.IsSuccessStatusCode)
-        {
-            string errorDetails = await finalResponse.Content.ReadAsStringAsync();
-            Console.WriteLine($"API Error on final request: {errorDetails}");
-            throw new Exception($"Error: {finalResponse.StatusCode}");
-        }
-
-        string finalResponseContent = await finalResponse.Content.ReadAsStringAsync();
-        using JsonDocument finalDoc = JsonDocument.Parse(finalResponseContent);
-
-        // Log token usage
-        if (finalDoc.RootElement.TryGetProperty("usage", out JsonElement usage))
-        {
-            Console.WriteLine($"Token Usage - Prompt: {usage.GetProperty("prompt_tokens")}, Completion: {usage.GetProperty("completion_tokens")}, Total: {usage.GetProperty("total_tokens")}");
-        }
-
-        return finalDoc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+        return processedChunks;
     }
-    catch (Exception ex)
+
+    // Generate the final synopsis
+    public static async Task<string> GenerateSynopsis(List<string> infoChunks, string plan, string writingStyle, string size, string extraNotes,string SysPrompt,string UserPrompt)
     {
-        Console.WriteLine($"An error occurred: {ex.Message}");
-        return string.Empty;
-    }
-} 
+        try
+        {
+            using HttpClient client = new HttpClient();
 
+            // Build the final messages dynamically
+            var finalMessages = new List<object>
+            {
+                new
+                {
+                    role = "system",
+                    content = SysPrompt
+                },
+                new
+                {
+                    role = "user",
+                    content = $"Plan:\n{plan}\n\nWriting style analysi of simular text to use when writing:\n{writingStyle}\n\nExtra writing notes to be heavily guided by:\n{extraNotes}\n\nSize in charaters:\n{size}\n\n" + UserPrompt
+                }
+            };
+
+            foreach (string chunk in infoChunks)
+            {
+                finalMessages.Add(new
+                {
+                    role = "user",
+                    content = $"Here is part of the information:\n{chunk}"
+                });
+            }
+
+            // Calculate tokens for input and adjust `max_tokens` dynamically
+            int inputTokens = Encoding.UTF8.GetByteCount(JsonSerializer.Serialize(finalMessages)) / BytesPerToken;
+            int maxAllowedTokens = Math.Min(16000, 32000 - inputTokens); // Ensure we don't exceed the model's limits
+
+            Console.WriteLine($"Input tokens: {inputTokens}, Allocating for completion: {maxAllowedTokens}");
+
+            var finalRequestBody = new
+            {
+                model = "gpt-4o",
+                messages = finalMessages,
+                max_tokens = maxAllowedTokens,
+                temperature = 0.6,
+                presence_penalty = 0.3, // Adjusted for better verbosity
+                frequency_penalty = 0.1 // Reduced to allow more flowing content
+            };
+
+            string jsonFinalBody = JsonSerializer.Serialize(finalRequestBody);
+
+            HttpRequestMessage finalRequest = new HttpRequestMessage(HttpMethod.Post, ApiUrl)
+            {
+                Headers = { { "Authorization", $"Bearer {ApiKey}" } },
+                Content = new StringContent(jsonFinalBody, Encoding.UTF8, "application/json")
+            };
+
+            HttpResponseMessage finalResponse = await client.SendAsync(finalRequest);
+
+            if (!finalResponse.IsSuccessStatusCode)
+            {
+                string errorDetails = await finalResponse.Content.ReadAsStringAsync();
+                Console.WriteLine($"API Error on final request: {errorDetails}");
+                throw new Exception($"Error: {finalResponse.StatusCode}");
+            }
+
+            string finalResponseContent = await finalResponse.Content.ReadAsStringAsync();
+            using JsonDocument finalDoc = JsonDocument.Parse(finalResponseContent);
+
+            // Log token usage for debugging
+            if (finalDoc.RootElement.TryGetProperty("usage", out JsonElement usage))
+            {
+                Console.WriteLine($"Token Usage - Prompt: {usage.GetProperty("prompt_tokens")}, Completion: {usage.GetProperty("completion_tokens")}, Total: {usage.GetProperty("total_tokens")}");
+            }
+
+            return finalDoc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An error occurred: {ex.Message}");
+            return string.Empty;
+        }
+    }
 }

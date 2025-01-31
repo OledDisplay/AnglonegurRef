@@ -5,19 +5,12 @@ class ImageProcessor
 {
     public static void ProcessImage(string inputPath, string outputPath)
     {
-        // Step 1: Load the image and convert to grayscale
+        // Load the image and convert to grayscale
         Mat original = Cv2.ImRead(inputPath, ImreadModes.Color);
         Mat grayscale = new Mat();
         Cv2.CvtColor(original, grayscale, ColorConversionCodes.BGR2GRAY);
 
-        // Step 2: Apply adaptive thresholding to create a binary image
-        Mat binary = new Mat();
-        Cv2.AdaptiveThreshold(grayscale, binary, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 15, 5);
-
-        // Save the binary image for debugging
-        Cv2.ImWrite("debug_binary.png", binary);
-
-        // Step 3: Apply sharpening to enhance edges on the binary image
+        // Apply sharpening BEFORE thresholding
         Mat sharpened = new Mat();
         Mat kernel = new Mat(3, 3, MatType.CV_32F, new float[]
         {
@@ -26,16 +19,17 @@ class ImageProcessor
             0, -1,  0
         });
 
-        // Convert binary image to float, apply filter, and convert back to 8-bit
-        binary.ConvertTo(binary, MatType.CV_32F);
-        Cv2.Filter2D(binary, sharpened, -1, kernel);
-        sharpened.ConvertTo(sharpened, MatType.CV_8U);
+        Cv2.Filter2D(grayscale, sharpened, -1, kernel);
 
-        // Save the sharpened image for debugging
-        Cv2.ImWrite("debug_sharpened.png", sharpened);
+        // Apply adaptive thresholding (tune block size & C if needed)
+        Mat binary = new Mat();
+        Cv2.AdaptiveThreshold(sharpened, binary, 255, AdaptiveThresholdTypes.GaussianC, ThresholdTypes.Binary, 15, 3);
+
+        // Invert colors for better OCR accuracy
+        Cv2.BitwiseNot(binary, binary);
 
         // Save the final processed image
-        Cv2.ImWrite(outputPath, sharpened);
+        Cv2.ImWrite(outputPath, binary);
         Console.WriteLine($"Processed image saved to: {outputPath}");
     }
 }

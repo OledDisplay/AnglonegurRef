@@ -6,6 +6,7 @@ using System.Threading;
 
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
+using System.Threading.Tasks;
 
 class DownloadInfoScript
 {
@@ -21,7 +22,7 @@ class DownloadInfoScript
     private static string BaseDir;
     private static string DirectoryTempPath;
 
-    public static void DownloadScript(string pageUrl, string root, string LoginName, string LoginPass, int urok, int RunLoop)
+    public static async Task DownloadScript(string pageUrl, string root, string LoginName, string LoginPass, int urok, int RunLoop)
     {
         if (File.Exists("Uchebnik\\Data.flag")  || Directory.Exists($"Uchebnik\\{urok}")) // add flag for downloadiing for second condition
         {
@@ -62,8 +63,8 @@ class DownloadInfoScript
         {
             do
             {
-                num = ScreenshotScript.ExtractNumberFromElement(_driver, themeKeyEl, heightKeyEl);
-                LoopBody(pageUrl, themeKeyEl, heightKeyEl);
+                num =  ScreenshotScript.ExtractNumberFromElement(_driver, themeKeyEl, heightKeyEl);
+                await LoopBody(pageUrl, themeKeyEl, heightKeyEl);
                 page += 2;
                 _driver.Navigate().GoToUrl(pageUrl + page.ToString());
             }
@@ -85,10 +86,10 @@ class DownloadInfoScript
             }
             while (num < urok);
 
-            LoopBody(pageUrl, themeKeyEl, heightKeyEl);
+            await LoopBody(pageUrl, themeKeyEl, heightKeyEl);
             page += 2;
             _driver.Navigate().GoToUrl(pageUrl + page.ToString());
-            LoopBody(pageUrl, themeKeyEl, heightKeyEl);
+            await LoopBody(pageUrl, themeKeyEl, heightKeyEl);
         }
 
         // Close Driver
@@ -115,7 +116,7 @@ class DownloadInfoScript
         }
     }
 
-    private static void LoopBody(string pageUrl, List<string> themeKeyEl, List<string> heightKeyEl)
+    private static async Task LoopBody(string pageUrl, List<string> themeKeyEl, List<string> heightKeyEl)
     {
         if (!Directory.Exists(Path.Combine(BaseDir, $"{num}")))
         {
