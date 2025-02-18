@@ -1,0 +1,52 @@
+Below is a bullet-point version of your prompt that preserves every detail from the original:
+
+- **Writing Style & Formatting:**
+  - Follow the writing style text format strictly.
+  - If instructed to use dashes under bullet points, use clear, separated dashes.
+  - If instructed to use a paragraph of text, present the text in a continuous paragraph.
+
+- **Source Information & External Details:**
+  - Base the conspectus primarily on the information provided.
+  - It can include small parts of external information if they are needed to reach the proper level of detail.
+  - The original plan will also contain some extra information.
+  - **YOU HAVE TO really expand and focus on these bits of info.**
+
+- **In-Depth Expansion:**
+  - Expand on each point with in-depth detail.
+  - Don’t just mention concepts or events; explain their historical context, impact, and relevance.
+  - For historical figures:
+    - Elaborate on their beliefs, actions, and philosophies.
+  - For events:
+    - Describe their implications on society and the political landscape.
+  - When discussing ideologies or reforms:
+    - Provide a detailed breakdown of their theoretical foundations, key proponents, and how they were practically implemented.
+  - Tie events to the wider political or philosophical movements they originate from.
+  - If using dashes under bullet points, split up separate events/ideologies (or similar content) into separate bullet points.
+  - In general, expand on each part of a bullet point with full, in-depth detail, writing it in the best possible way.
+
+- **Explanation & Context:**
+  - Explain the meaning and the “meat-and-bones” behind events.
+  - Avoid merely giving a plain acknowledgment or focusing on listing large-scale facts.
+  - In-depth explanation of nuanced points that gives more context is preferred over including extra dates.
+
+- **Tone & Language:**
+  - Ensure the writing adopts a formal and scholarly tone.
+  - Use precise academic terminology, especially when discussing historical figures, concepts, and events.
+  - **IF YOU FIND A PERSON OR EVENT MENTIONED** (for example, if a question is asked about their ideology or beliefs):
+    - Go in depth when describing them, explaining absolutely everything there is to be said.
+
+- **Bullet Points Flow:**
+  - If using dashes under bullet points, ensure they are connected in a lyrical way.
+  - Make them seem like they are part of a cohesive text, not just separated chunks of information.
+  - Emphasize the flow of the points, their logical connection, and smooth transitions.
+
+- **Personal Notes:**
+  - Make sure to sometimes use words ending in "йки", replacing heavy and monotone phrases.
+  - Do not repeat yourself when trying to reach a word limit.
+  - Ensure every dash contains at least a little unique information.
+
+- **Final Output Requirements:**
+  - DO NOT INCLUDE ANY CLOSING STATEMENTS OR EXTRA PARAGRAPHS UNDER THE CONSPECTUS.
+  - YOU SHOULD PUT ALL THE SIZE-PROVIDED CHARACTERS IN THE CONSPECTUS.
+  - YOU HAVE TO WRITE IT IN BULGARIAN!!!!
+  - FOLLOW THE WRITING STYLE and SIZE STRICTLY!!!

@@ -1,1 +1,1 @@
-Generate a detailed conspectus strictly following the plan. Expand all points fully and aim to use the full token limit to provide a detailed, comprehensive response. Include examples and elaborate on each point.
+Generate a detailed conspectus strictly following the plan. Expand all points fully and aim to use the full token limit to provide a detailed, comprehensive response. Include examples and elaborate on each point. Be sure to list the information below the bullet points in the way the writing style mentions.

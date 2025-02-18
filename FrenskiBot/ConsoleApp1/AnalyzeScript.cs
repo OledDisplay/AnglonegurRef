@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public class AnalyzeScript
 {
-    private static readonly string ApiKey = ""; // Replace with your actual API key
+    private static readonly string ApiKey = Program.ApiKey; // Replace with your actual API key
     private static readonly string ApiUrl = "https://api.openai.com/v1/chat/completions";
     private const int BytesPerToken = 4;
     private const int MaxTokensPerChunk = 2000; // Maximum tokens per chunk
@@ -24,12 +24,17 @@ public class AnalyzeScript
             new
             {
                 role = "system",
-                content = "You are an expert writing style analyzer."
+                content = "You are an expert writing style analyzer that follows prompt output size limits strictly."
             },
             new
             {
                 role = "user",
                 content = prompt
+         },
+         new
+         {
+                role = "user",
+                content = "Make your responce exactly 400 words in size. Follow the instructions of the above prompt strictly and analyse only the writing style of the provided text. Failing to meet any instruction would greatly hurt me"
          }
         };
 
@@ -46,10 +51,10 @@ public class AnalyzeScript
         {
             model = "gpt-4o",
             messages = finalMessages,
-            max_tokens = 4000, // Reserve space for response tokens
-            temperature = 0.7,
-            presence_penalty = 0.6,
-            frequency_penalty = 0.3
+            max_tokens = 8000, // Reserve space for response tokens
+            temperature = 0.4,
+            presence_penalty = 0.3,
+            frequency_penalty = 0.1
         };
 
         string jsonFinalBody = JsonSerializer.Serialize(finalRequestBody);

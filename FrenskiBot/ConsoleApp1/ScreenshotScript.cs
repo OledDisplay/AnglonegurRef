@@ -101,6 +101,7 @@ class ScreenshotScript
         catch (Exception ex)
         {
             Console.WriteLine($"Error while taking screenshot: {ex.Message}");
+            if(ex.Message == @" The directory placeholder of the filename placeholder\pishki0.png does not exist.") return -3;
             return -1;
         }
     }

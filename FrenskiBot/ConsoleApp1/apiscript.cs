@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 public class Apiscript
 {
-    private static readonly string ApiKey = ""; // Replace with your actual key
+    private static readonly string ApiKey = Program.ApiKey; // Replace with your actual key
     private static readonly string ApiUrl = "https://api.openai.com/v1/chat/completions";
     private const int BytesPerToken = 4;
 
@@ -47,7 +47,7 @@ public class Apiscript
     }
 
     // Preprocess the chunks to remove filler words and summarize relevant information
-    public static async Task<List<string>> PreprocessChunks(List<string> infoChunks)
+    public static async Task<List<string>> PreprocessChunks(List<string> infoChunks,string usPrompt)
     {
         List<string> processedChunks = new List<string>();
         using HttpClient client = new HttpClient();
@@ -64,7 +64,7 @@ public class Apiscript
                 new
                 {
                     role = "user",
-                    content = $"Here is the text to preprocess:\n{chunk}\n\nClean up this text without removing any information"
+                    content = $"Here is the text to preprocess:\n{chunk}\n\n" + usPrompt
                 }
             };
 
@@ -118,10 +118,18 @@ public class Apiscript
                 new
                 {
                     role = "user",
-                    content = $"Plan:\n{plan}\n\nWriting style analysi of simular text to use when writing:\n{writingStyle}\n\nExtra writing notes to be heavily guided by:\n{extraNotes}\n\nSize in charaters:\n{size}\n\n" + UserPrompt
+                    content = $"Materials for writing:\n\n\nPlan:\n{plan}\n\nExtra writing notes to be heavily guided by:\n{extraNotes}\nTake special note of the personal writing notes\n\n" + UserPrompt
+                },
+                new
+                {
+                    role = "user",
+                    content = $"Use this writing style analysis of simular text to write this new conspectus in the exact same writing style:\n{writingStyle}"
+                },
+                new {
+                    role = "user",
+                    content = $"Make the conspectus exactly {size} words in size on the dot. Follow every instruction above—if the the points from the plan aren't 1:1 in the final and size isn't matched, the output is not acceptable."
                 }
             };
-
             foreach (string chunk in infoChunks)
             {
                 finalMessages.Add(new
@@ -133,6 +141,7 @@ public class Apiscript
 
             // Calculate tokens for input and adjust `max_tokens` dynamically
             int inputTokens = Encoding.UTF8.GetByteCount(JsonSerializer.Serialize(finalMessages)) / BytesPerToken;
+            
             int maxAllowedTokens = Math.Min(16000, 32000 - inputTokens); // Ensure we don't exceed the model's limits
 
             Console.WriteLine($"Input tokens: {inputTokens}, Allocating for completion: {maxAllowedTokens}");
@@ -142,7 +151,7 @@ public class Apiscript
                 model = "gpt-4o",
                 messages = finalMessages,
                 max_tokens = maxAllowedTokens,
-                temperature = 0.6,
+                temperature = 0.65,
                 presence_penalty = 0.3, // Adjusted for better verbosity
                 frequency_penalty = 0.1 // Reduced to allow more flowing content
             };
