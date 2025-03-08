@@ -101,7 +101,7 @@ public class Apiscript
     }
 
     // Generate the final synopsis
-    public static async Task<string> GenerateSynopsis(List<string> infoChunks, string plan, string writingStyle, string size, string extraNotes,string SysPrompt,string UserPrompt)
+    public static async Task<string> GenerateSynopsis(List<string> infoChunks, string plan, string writingStyle, string size, string extraNotes,string SysPrompt,string UserPrompt,string skeleton)
     {
         try
         {
@@ -118,17 +118,23 @@ public class Apiscript
                 new
                 {
                     role = "user",
-                    content = $"Materials for writing:\n\n\nPlan:\n{plan}\n\nExtra writing notes to be heavily guided by:\n{extraNotes}\nTake special note of the personal writing notes\n\n" + UserPrompt
+                    content = $"Materials for writing:\n\n\nPlan:\n{plan}\nTrim explanations form large NESTED bullet points(not main ones, the ones inside them - starting with a cyrilic letter) and leave only their title\n\nExtra writing notes to be heavily guided by:\n{extraNotes}\nTake special note of the personal writing notes\n\n" + UserPrompt
                 },
                 new
                 {
                     role = "user",
                     content = $"Use this writing style analysis of simular text to write this new conspectus in the exact same writing style:\n{writingStyle}"
                 },
-                new {
+                 new
+                {
                     role = "user",
-                    content = $"Make the conspectus exactly {size} words in size on the dot. Follow every instruction above—if the the points from the plan aren't 1:1 in the final and size isn't matched, the output is not acceptable."
-                }
+                    content = skeleton
+                },
+              new {
+    role = "user",
+    content = $"Ensure the conspectus is exactly **{size} words**—no more, no less. If the response is too short, keep expanding, adding details, examples, and reinforcing arguments. If you reach a natural stopping point before {size} words, **continue expanding or reword sections to reach the target**. Under no circumstances should the response end early!"
+}
+
             };
             foreach (string chunk in infoChunks)
             {
@@ -151,9 +157,9 @@ public class Apiscript
                 model = "gpt-4o",
                 messages = finalMessages,
                 max_tokens = maxAllowedTokens,
-                temperature = 0.65,
+                temperature = 0.625,
                 presence_penalty = 0.3, // Adjusted for better verbosity
-                frequency_penalty = 0.1 // Reduced to allow more flowing content
+                frequency_penalty = 0.15 // Reduced to allow more flowing content
             };
 
             string jsonFinalBody = JsonSerializer.Serialize(finalRequestBody);

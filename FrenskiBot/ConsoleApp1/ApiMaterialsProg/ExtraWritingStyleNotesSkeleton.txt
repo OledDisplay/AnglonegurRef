@@ -1,0 +1,39 @@
+IGNORE ALL THE EXTRA TASKS IN THE ORIGINAL PLAN.
+
+ECUALISE THE CONSPECTUSES CONTENTS BASED ON THE SIZE LIMITS. DONT USE ALL YOUR WORDS IN THE FIRST BULLET POINTS AND GIVE PRIORITY TO ONES THAT MENTION SPECIFIC BIG EVENTS OR MOVEMENTS. GIVE EXTRA PRIORITY TO AND PUT AT LEAST TWO DASHES UNDER EMPTY BIG BULLET POINTS (ones with numbers)
+
+Make sure to follow the writing style text format strictly. If said to use dashes under bullet points, separate the information into clear separated dashes, if said to use a paragraph of text, do that.
+
+Regarding the information in the conspectus. Make sure that its level is matched to the requirment of all other prompt criteria. You should use all sorts of external and internal infomation to get a conspectus that is complex and clean, mathcing the writing style AS WELL as possible.
+
+Expand on each point with in-depth detail. Don’t just mention concepts or events; explain their historical context, impact, and relevance. For historical figures, elaborate on their beliefs, actions, and philosophies, and for events, describe their implications on society and the political landscape. When discussing ideologies or reforms, provide a detailed breakdown of their theoretical foundations, key proponents, and how they were practically implemented. Tie events to the wider political or philosophical movements they originate from. If using dashes under bullet points, split up separate events / ideologies or any of that kind into separate bullet points. In general just expand on each part of a bullet point with full in-depth detail, writing on it in the best possible way.
+
+Explain meaning and meat-and-bones behind events, not just giving a plain aknowledgment or focusing on listing large scale facts. Going in depth on something that is more neish, but gives more context is better than including extra dates.
+
+Ensure the writing adopts a formal and scholarly tone. Use precise academic terminology, particularly when discussing historical figures, concepts, and events. 
+But prioritize the provided writing style first, the scholar tone second.
+
+Make sure you actually in some way mention who a person is, the first time their are mentioned, if detail close to them isn't mentioned in context, information or bullet points previously. This applies to monarchs, philosiphers, ex.
+
+IF YOU FIND A PERSON OR EVENT MENTIONED, FORX EXAMPLE IF A QUESTION IS ASKED ABOUT THEIR IDEOLOGY OR BELIEFS, GO IN DEPTH WHEN DESCRIBING THEM, EXPLAINING ABSOLUTELY EVERTHING THERE IS TO BE SAID.
+
+If using dashes under the bullet points make sure they are connected in a lyrical way (Make it seem like they are more over part of a big text, not separated chunks of information). Put a big emphasis on the flow of the points, their logical connection and smooth transition.
+
+/personal notes
+Do not comprise information detail when addressing personal notes. Only use them for shape of writing
+
+Make sure to sometimes use words ending in "йки"(like "показвайки, изкарвайки, изразявайки"), replacing heavy and monotone phrases.
+Do not repeat yourself when trying to reach a word limit. Make sure every dash is at least a little unique in information. 
+Focus on making the text flow really smoothly, heavy on a more lyrical way of speech
+that strips the bone factual structure and lets the writing style shine through, while keeping the clarity of the text.
+The conspectus should be lightweight. It should be an easy read that, is in depth in information and flows nicely, with notes of lyrical speech.
+Remeber to preserve the plan at all times DO NOT CHANGE OR REMOVE POINTS IN ANY CONTEXT.
+/
+
+Be sure to match the sentance complexity mentioned by the writing style. 
+
+DO NOT INCLUDE ANY CLOSING STATEMENTS OR EXTRA PARAGRAPHS UNDER THE CONSPECTUS, YOU SHOULD PUT ALL THE SIZE-PROVIDED CHARACTERS IN THE CONSPECTUS
+
+YOU HAVE TO WRITE IT IN BULGARIAN!!!!
+
+FOLLOW THE WRITING STYLE and SIZE STRICTLY!!!

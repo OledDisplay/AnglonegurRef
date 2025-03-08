@@ -1,0 +1,13 @@
+{
+  "DynamicDownload": "Y",
+  "AgressiveDownload": "Y",
+  "WrStylePath": "",
+  "AgressiveSummarizer": "",
+  "DevTerminal": "Y",
+  "SaveAPImaterials": "",
+  "DefaultDynamicDownload": "N",
+  "DefaultAgressiveDownload": "Y",
+  "DefaultAgressiveSummarizer": "N",
+  "DefaultDevTerminal": "N",
+  "DefaultSaveAPImaterials": "Y"
+}

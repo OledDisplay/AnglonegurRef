@@ -1,0 +1,37 @@
+Got it! I'll rewrite your instructions to be more concise while keeping every detail and nuance intact. Here’s the optimized version:  
+
+---
+
+### **Optimized API Input Instructions**  
+
+Ensure **equal distribution** of content within the conspectus based on size limits. **Do not front-load information**—prioritize points discussing **major events or movements**. If a **big bullet point (numbered) lacks content**, give it extra priority and **underline it twice**.  
+
+Strictly **follow the provided writing style**:  
+- If the style requires **dashes**, structure information in **clear, distinct** dashes.  
+- If a **paragraph** format is required, use full paragraphs.  
+
+### **Content Expansion & Depth**  
+- The conspectus should be **primarily based** on the given information but may **include minor external details** if necessary for depth.  
+- **Expand every point** thoroughly—explain historical context, **societal and political impact**, and connections to broader movements.  
+- For **figures**, describe their **beliefs, actions, and influence**.  
+- For **events**, detail **their causes, effects, and wider implications**.  
+- For **ideologies**, break down **foundations, key proponents, and practical implementation**.  
+
+### **Clarity, Depth & Flow**  
+- Do **not** merely list facts—**explain the significance** behind them.  
+- If a person or event is **mentioned**, provide **full details** on their role, beliefs, and impact, even if their name appears in a question.  
+- When using **dashes**, ensure they flow **lyrically**, forming a **cohesive narrative** rather than isolated points.  
+
+### **Writing Style & Language**  
+- Maintain **a formal, scholarly tone**, using **precise academic terminology** for historical figures, concepts, and events.  
+- **Writing style** takes priority over tone—**match sentence complexity** as required.  
+- Use **words ending in "йки"** (e.g., „показвайки, изразявайки“) to replace **heavy, monotone phrases**.  
+- Do **not repeat** content unnecessarily—ensure **each dash adds new detail**.  
+- The text should be **lightweight, deeply informative, and lyrical**, **preserving clarity while ensuring smooth, natural flow**.  
+
+### **Structural & Formatting Rules**  
+- **Ignore all questions in the plan** - ignore all extra tasks / questions, write nothing on them
+- **Preserve the plan exactly**—do **not remove or alter** points.  
+- **Do not** include **closing statements** or summary paragraphs—use all available characters **within the conspectus itself**.  
+- If the plan mentions **information directly**, do **not copy it verbatim**—**expand on it** instead.  
+- **Write in Bulgarian.**  

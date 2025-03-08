@@ -8,12 +8,17 @@ using System.Security.Cryptography.X509Certificates;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Reflection;
 using System.Net;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Text.Json.Serialization;
 using OpenQA.Selenium.BiDi.Modules.Log;
 using System.ComponentModel;
+using OpenQA.Selenium;
+using System.Collections.Specialized;
+using OpenCvSharp.XPhoto;
 
 class Program
 {
@@ -46,9 +51,14 @@ class Program
         string imagePath = Path.Combine(imageFolder, "");
 
         //ConsolePath
-        /*string pathConsole = Path.Combine(projectRoot,"ConsoleSaves");
+        string pathConsole = Path.Combine(projectRoot,"ConsoleSaves");
         string ConsoleOptions = Path.Combine(pathConsole, "Options.json");
-        File.Create(ConsoleOptions);*/
+        Directory.CreateDirectory(pathConsole);
+        if (!File.Exists(ConsoleOptions))
+            {
+                using (FileStream fs = File.Create(ConsoleOptions)) { }
+            }
+
     
 
         //Download web page
@@ -107,38 +117,42 @@ class Program
         {
             Console.WriteLine($"Error during NuGet restore: {ex.Message}");
         }
-
-        //await ConsoleScript(ConsoleOptions);
-
-        // User input 
-        int urok;
-        int DownloadTextbook = 1;
-        Console.WriteLine("Format Y/N for questions..\nDownload dynamicly or use local download?:");
-        if(Console.ReadLine() == "Y") {
-         DownloadTextbook = 0;
-        }
-        do {
-          Console.WriteLine("Enter urok num > 1, int:");
-        }
-        while (!int.TryParse(Console.ReadLine(), out urok) && urok < 2);
         
-        //EXTRA OPTIONS (un-need conventionally but are stil useful to have)
+        // settings paths (all these paths are the actualy important code-wise so they are defined a bit lower)
 
-        //Estimate page before agressive download
-        bool agro = false;
-        if(DownloadTextbook == 0) {
-            Console.WriteLine("Use Agressive download?:");
-            if(Console.ReadLine() == "Y") agro = true;
-        }
-
-        //Summarize 
+        //Set paths for api
+        string apiFolder = Path.Combine(projectRoot, "ApiMaterialsProg");
+        string skeleton = Path.Combine(projectRoot, "skeleton.txt");
+        string DebugFolder = Path.Combine(projectRoot, "DebugOutputs");
+        string wrStyleContent = File.ReadAllText(Path.Combine(apiFolder,"GPT-generatedAPIwrstyle.txt"));
+        string plan = File.ReadAllText(Path.Combine(apiFolder,"plan.txt"));
+        string InputSys = File.ReadAllText(Path.Combine(apiFolder,"InputSystem.txt"));
+        string InputUser = File.ReadAllText(Path.Combine(apiFolder,"InputUser.txt"));
+        string writingNotes= File.ReadAllText(Path.Combine(apiFolder,"ExtraWritingStyleNotesSkeleton.txt"));
+        string info = output;
+       
+        //Debug / saved output paths
+        string infoCleanDB = Path.Combine(DebugFolder,"CleanInfo.txt");
+        string infoSumDB = Path.Combine(DebugFolder,"info summarized.txt");
+        string BulkDB = Path.Combine(DebugFolder,"WRstyleBulk.txt");
+    
+        // Writing style folder
+        string wrStyleFolder = Path.Combine(projectRoot,"WritingStyle");
+        Directory.CreateDirectory(wrStyleFolder);
+        
+        // Settings paths and further options
+        //string[] options = await ConsoleScript(ConsoleOptions, wrStyleFolder,apiFolder,BulkDB); // launch console app
+        int urok = 16;
+        int DownloadTextbook = 1;
+        bool agro = true;
         bool summType = false;
-        Console.WriteLine("Summarize info text (leaves more space for responce) or keep all?:");
-        if(Console.ReadLine() == "Y"){
-            summType = true;
-        }
+        // dependant paths
+        string conspecutsDB = Path.Combine(DebugFolder,$"conspectus{urok}.txt");
+        string summarizePrompt = File.ReadAllText(Path.Combine(apiFolder, "CLG.txt"));
+        //string summarizePrompt = File.ReadAllText(Path.Combine(apiFolder, summType ? "CleanupSummarize.txt" : "CleanupPreserve.txt"));
 
 
+        // Generation process
         // Get png from webpage
         await DownloadInfoScript.DownloadScript(url,projectRoot, LogName, LogPass, urok,DownloadTextbook,agro); // url to textbook page,project root,LoginName,LoginPass
 
@@ -173,64 +187,15 @@ class Program
 
         Console.WriteLine(cleanedText);
 
-        
-        //Set paths for api
-        string apiFolder = Path.Combine(projectRoot, "ApiMaterialsProg");
-        string DebugFolder = Path.Combine(projectRoot, "DebugOutputs");
-        string wrStyleContent = File.ReadAllText(Path.Combine(apiFolder,"GPT-generatedAPIwrstyle.txt"));
-        string plan = File.ReadAllText(Path.Combine(apiFolder,"plan.txt"));
-        string InputSys = File.ReadAllText(Path.Combine(apiFolder,"InputSystem.txt"));
-        string InputUser = File.ReadAllText(Path.Combine(apiFolder,"InputUser.txt"));
-        string writingNotes= File.ReadAllText(Path.Combine(apiFolder,"ExtraWritingStyleNotes.txt"));
-        string summarizePrompt = File.ReadAllText(Path.Combine(apiFolder, summType ? "CleanupPreserve.txt" : "CleanupSummarize.txt"));
-        string info = output;
-       
-        //Debug / saved output paths
-        string infoCleanDB = Path.Combine(DebugFolder,"CleanInfo.txt");
-        string infoSumDB = Path.Combine(DebugFolder,"info summarized.txt");
-        string conspecutsDB = Path.Combine(DebugFolder,$"conspectus{urok}.txt");
-        string BulkDB = Path.Combine(DebugFolder,"WRstyleBulk.txt");
-        List<string> finalPropmt = Apiscript.SplitIntoChunks(info,2000);
-        
-    
-        // Writing style folder
-        string wrStyleFolder = Path.Combine(projectRoot,"WritingStyle");
-        Directory.CreateDirectory(wrStyleFolder);
-
-        
-        // Check for writing style file and extract writing style
-        do {
-            Console.WriteLine("Check if writing style folder contains example text files. If not, add some! Confirm with input ");
-        }
-        while(Console.ReadLine() == "" && Directory.GetFiles(wrStyleFolder).Length == 0);
-        switch(File.Exists(Path.Combine(wrStyleFolder,"writingstyle.txt")) ? 1: 0) {
-            case 1:
-             Console.WriteLine("Writing style file prescent. Replace with current example text? Y/N:");
-             if(Console.ReadLine() == "Y") File.Delete(Path.Combine(wrStyleFolder,"writingstyle.txt"));
-             else break;
-             goto default;
-             
-            default:
-             string WritingStyleBulk = "";
-             string[] files = Directory.GetFiles(wrStyleFolder);
-             for(int i = 0; i < files.Length; i++ ) {
-              if(Path.GetExtension(Path.Combine(wrStyleFolder, files[i])) != ".txt"){ 
-                // advanced hand writing ocr
-                Console.WriteLine("Writing style reader not implemented yet.");
-              }
-              else WritingStyleBulk += File.ReadAllText(Path.Combine(wrStyleFolder, files[i]));
-             }
-             File.WriteAllText(BulkDB,WritingStyleBulk);
-             await AnalyzeScript.SaveWrStyle(WritingStyleBulk,Path.Combine(wrStyleFolder,"writingstyle.txt"),Path.Combine(apiFolder,"WritingStyleInputDes.txt"));
-             break;
-        }
+        //summarize info tex
+        List<string> finalPropmt = Apiscript.SplitIntoChunks(cleanedText,2000);
 
         //summerization info text a little
         Console.WriteLine("Cleaning up the text from the textbook...");
         List<string> preprocessedChunks = await Apiscript.PreprocessChunks(finalPropmt,summarizePrompt); //info text unedited, which summ prompt to use
 
         Console.WriteLine("Enter conspectus size in words:");;
-        string ApiOutput= await Apiscript.GenerateSynopsis(preprocessedChunks,plan,wrStyleContent,Console.ReadLine(),writingNotes,InputSys,InputUser); // info text,writing style,conspectus size, extra writing notes, input
+        string ApiOutput= await Apiscript.GenerateSynopsis(preprocessedChunks,plan,wrStyleContent,Console.ReadLine(),writingNotes,InputSys,InputUser,skeleton); // info text,writing style,conspectus size, extra writing notes, input
         Console.WriteLine("\n\nGenerated Conspectus:");
         Console.WriteLine(ApiOutput);
 
@@ -239,6 +204,32 @@ class Program
         File.WriteAllText(infoSumDB,string.Join("",preprocessedChunks));
         File.WriteAllText(conspecutsDB,ApiOutput);
     }
+
+
+    private static async Task<string> WritingStyle(string WrStyleFolder,string ApiFolder, string DebugFolder, int type,string wrIndex){
+        switch(type) {
+            case -1:
+             File.Delete(Path.Combine(WrStyleFolder,$"writingstyle{wrIndex}.txt"));
+             return "";
+            case 0:
+             return File.ReadAllText($"writingstyle{wrIndex}.txt");
+            default:
+             string WritingStyleBulk = "";
+             string[] files = Directory.GetFiles(WrStyleFolder);
+             for(int i = 0; i < files.Length; i++ ) {
+              if(Path.GetExtension(Path.Combine(WrStyleFolder, files[i])) != ".txt"){ 
+                // advanced hand writing ocr
+                Console.WriteLine("Writing style reader not implemented yet.");
+              }
+              else if(!files[i].Contains("writingstyle")) WritingStyleBulk += File.ReadAllText(Path.Combine(WrStyleFolder, files[i]));
+             }
+             File.WriteAllText(DebugFolder,WritingStyleBulk);
+             await AnalyzeScript.SaveWrStyle(WritingStyleBulk,Path.Combine(WrStyleFolder,$"writingstyle{wrIndex}.txt"),Path.Combine(ApiFolder,"WritingStyleInputDes.txt"));
+             return File.ReadAllText(Path.Combine(WrStyleFolder,$"writingstyle{wrIndex}.txt"));
+        }
+
+    }
+
 
     private static void DownloadFile(string url, string savePath)
     {
@@ -254,155 +245,390 @@ class Program
         }
     }
 
-    // Nov console script se oshte ne bachka
-    
-    private static void ConsoleScript(string FilePath){
-      string sysMessage;
-      int layer = 1;
-      int option = 1;
-      List<string> Lay1 = new List<string>{"Uchebnik and Dev settings","ApiSettings","MainSettings","GenerateConspectus"};
-      List<string> Lay2 = new List<string>{"1DynamicDownload","1AgressiveDownload","1DevTerminal","2AgressiveSummarizer","2SaveApiMaterials","3UrokNum","3size","3WritingStyle"}; // put option number infront of name of nested options
-      List<string> Lay3 = new List<string>{"4Change","4AddNew","4Delete"};
-      List<string> Lay4 = new List<string>(), InputPackage = new List<string>(); // lay 4 is bulit dynamicly
+    // Demo console script, notes are to be added as changes are still happening rapidly
+    private static List<string> InputPackage = new List<string>(), PathSettings = new List<string>(),  TempNumOptions = new List<string> { "UrokNum", "Size" },SettingsOutput = new List<string> { "", "", "" }; // Path is used in Add options bonus and it is easier to have it as static
+    private static PropertyInfo prop;
+    private static string jsonString;
+    private static User textjson;
+    private static async Task<string[]> ConsoleScript(string FilePath, string WrStyleFolder, string ApiFolder, string DebugFolder)
+{
+    string sysMessage = "", cOpt = "", a = "", WrStyleContents = "";
 
-      List<List<string>> Layers = new List<List<string>>{Lay1,Lay2,Lay3, Lay4};
-      List<int> LevelGrid = [1,1,1,1];
+    ConsoleKeyInfo key;
+    int layer = 0, option = 0, edit, oldlayer = 0;
+    List<string> Lay1 = new List<string> { "0Uchebnik and Dev settings", "0ApiSettings", "0MainSettings", "0GenerateConspectus" };
+    List<string> Lay2 = new List<string> { "1DynamicDownload", "1AgressiveDownload", "1DevTerminal", "2AgressiveSummarizer", "2SaveApimaterials", "3UrokNum", "3Size", "3WritingStyle" }; // put option number infront of name of nested options
+    List<string> Lay3 = new List<string> { "3Change", "3AddNew", "3Delete" };
+    List<string> Lay4 = new List<string>(); // lay 4 is built dynamically
+    List<string> Bools = new List<string> { "DynamicDownload", "AgressiveDownload", "DevTerminal", "AgressiveSummarizer", "SaveAPImaterials" };
+    List<List<string>> Layers = new List<List<string>> { Lay1, Lay2, Lay3, Lay4 };
 
-      //setup options file 
-      if(string.IsNullOrEmpty(File.ReadAllText(FilePath).Trim())){
-        var userman = new User{
-            DynamicDownload = "",
-            AgressiveDownload = "",
-            WrStylePath = "",
-            AgroSumm = "",
-            DevTerminal = "",
-        };
+    //prep prop info
+    var userman = new User
+    {
+        DynamicDownload = "",
+        AgressiveDownload = "",
+        WrStylePath = "",
+        AgressiveSummarizer = "",
+        DevTerminal = "",
+        SaveAPImaterials = "",
+    };
 
+    //setup options file 
+    if (string.IsNullOrEmpty(File.ReadAllText(FilePath).Trim()))
+    {
         string json = JsonConvert.SerializeObject(userman, Formatting.Indented);
         File.WriteAllText(FilePath, json);
         sysMessage = "Options file created";
-      }
+    }
 
-     string jsonString = File.ReadAllText(FilePath);
-     User textjson = JsonConvert.DeserializeObject<User>(jsonString);
+    jsonString = File.ReadAllText(FilePath);
+    textjson = JsonConvert.DeserializeObject<User>(jsonString);
 
-     Console.WriteLine(@"Configure Frenskibot with a menu..");
-     Thread.Sleep(2000);
-     
-    while(true)
+    Console.WriteLine(@"Configure Frenskibot with a menu..");
+    Thread.Sleep(2000);
+
+    prop = typeof(User).GetProperty("WrStylePath");
+    if (!jsonString.Contains($"\"{prop}\": \"\"") || jsonString.Contains($"\"{prop}\": \"  \""))
     {
-        List<string> DisplayedMenus = new List<string>();
+        WrStyleContents = prop.GetValue(textjson).ToString();
+    }
+    Console.Clear();
+    while (true)
+    {
+        if (InputPackage.Count == 0) InputPackage = FindOptionsByIndex(option.ToString(), Layers[layer]); // inputpackage is built prematurely with wrstyle
+        if (oldlayer != layer) option = 1;
+        option = SwitchOptions(sysMessage, string.Join("", PathSettings).Replace(@"\", @"\\"));
+        if (option != -1) cOpt = InputPackage[option - 1];
+        oldlayer = layer;
 
-        if(LevelGrid[layer] != -1)
+        sysMessage = "";
+        prop = typeof(User).GetProperty(cOpt);
+        if (option == -1 && layer > 0)
         {
-            switch(layer)
+            layer--;
+            PathSettings.RemoveAt(PathSettings.Count - 1);
+            sysMessage = $"Moved back";
+            option = 0;
+            InputPackage.Clear();
+        }
+        else
+        {
+            // check for extra behaviour first and use goto
+            if (string.Join("", PathSettings).Replace(@"\", @"\\") == "4")
+            { // leave the script
+                if (WrStyleContents == "") sysMessage = "No writing style file selected. Make sure all Main options are configured";
+                else if (SettingsOutput[0] == "") sysMessage = "No lesson index given. Make sure all Main options are configured";
+                else if (SettingsOutput[1] == "") sysMessage = "No size for the conspectus given. Make sure all Main options are configured";
+
+                else
+                {
+                    Console.WriteLine("\nSystem Message:\nStarting generation process..");
+                    goto exit_while;
+                }
+            }
+
+            else if (Bools.Contains(cOpt))
             {
-                case 1: 
-                    layer++;
-                    break;
-                case 2:
-                    foreach(string menu in Layers[option])
+                sysMessage = $"Confirmed False for {cOpt}";
+                if (prop.GetValue(textjson).ToString() == "Y") prop.SetValue(textjson, "N");
+                else
+                {
+                    prop.SetValue(textjson, "Y");
+                    sysMessage = $"Confirmed True for {cOpt}";
+                }
+
+                string json1 = JsonConvert.SerializeObject(textjson, Formatting.Indented);
+                File.WriteAllText(FilePath, json1);
+                continue;
+            }
+            else if (prop != null)
+            {
+                sysMessage = "Enter value";
+                Update(option, string.Join("", PathSettings).Replace(@"\", @"\\"), sysMessage);
+
+                edit = prop.GetValue(textjson).ToString().Length;
+                Console.SetCursorPosition(edit, Console.CursorTop); // Move cursor to the end of the current line
+                StringBuilder inputBuilder = new StringBuilder(prop.GetValue(textjson).ToString());
+
+                while (true)
+                {
+                    key = Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Enter)
                     {
-                        if(GetMenuLevel(menu)==LevelGrid[layer])
+                        break; // Exit input loop on Enter
+                    }
+                    else if (key.Key == ConsoleKey.Backspace)
+                    {
+                        if (inputBuilder.Length > 0)
                         {
-                             DisplayedMenus.Add(menu);
+                            inputBuilder.Remove(inputBuilder.Length - 1, 1);
+                            Console.Write("\b \b"); // Move cursor back, overwrite with space, move back again
                         }
                     }
-                    layer++;
-                    switch(LevelGrid[0])
+                    else if (char.IsDigit(key.KeyChar))
                     {
-                            case 1:
-                              switch(LevelGrid[layer]){}
-                            //DynamicDownload
-                            break;
-
-                            case 2:
-
-                            //DynamicDownload
-                            break;
-                            case 3:
-
-                            //DynamicDownload
-                            break;
-
-
-                           
+                        inputBuilder.Append(key.KeyChar);
+                        Console.Write(key.KeyChar); // Print the digit to the right
                     }
-                    break;
-                case 3:
-
-                break;
+                }
+                
+                sysMessage = $"Confirmed {inputBuilder}";
+                prop.SetValue(textjson, inputBuilder.ToString());
+                string json1 = JsonConvert.SerializeObject(textjson, Formatting.Indented);
+                File.WriteAllText(FilePath, json1);
+                continue;
             }
 
+            else if (TempNumOptions.Contains(cOpt))
+            {
+                sysMessage = "Enter value";
+                Update(option, string.Join("", PathSettings).Replace(@"\", @"\\"), sysMessage);
+
+                edit = SettingsOutput[TempNumOptions.IndexOf(cOpt)].Length;
+                Console.SetCursorPosition(edit, Console.CursorTop); // Move cursor to the end of the current line
+                StringBuilder inputBuilder = new StringBuilder(SettingsOutput[TempNumOptions.IndexOf(cOpt)]);
+
+                while (true)
+                {
+                    key = Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Enter)
+                    {
+                        break; // Exit input loop on Enter
+                    }
+                    else if (key.Key == ConsoleKey.Backspace)
+                    {
+                        if (inputBuilder.Length > 0)
+                        {
+                            inputBuilder.Remove(inputBuilder.Length - 1, 1);
+                            Console.Write("\b \b"); // Move cursor back, overwrite with space, move back again
+                        }
+                    }
+                    else if (char.IsDigit(key.KeyChar))
+                    {
+                        inputBuilder.Append(key.KeyChar);
+                        Console.Write(key.KeyChar); // Print the digit to the right
+                    }
+                }
+                sysMessage = $"Confirmed {inputBuilder}";
+                SettingsOutput[TempNumOptions.IndexOf(cOpt)] = inputBuilder.ToString();
+                continue;
+            }
+
+            else if (layer < Layers.Count)
+            {
+                PathSettings.Add("\\" + option);
+                layer++;
+                sysMessage = $"Selected option {cOpt}. Moved to layer {layer}";
+            }
+            //debug
+            string prepPath = string.Join("", PathSettings).Replace(@"\", @"\\").Substring(0, string.Join("", PathSettings).LastIndexOf("\\"));
+            sysMessage = $"Debug: {prepPath}";
+            InputPackage.Clear();
+            if(layer == 3 && prepPath == @"3\\3\\2"){
+                await WritingStyle(WrStyleFolder, ApiFolder, DebugFolder, 1, (option + 1).ToString());
+                 prop.SetValue(textjson, $"writingstyle{option}.txt");
+                 sysMessage = $"Added and selected new writingstyle{option}.txt file";
+            }
+            else if (layer == 3 && !sysMessage.Contains("Selected option"))
+            {
+                string[] files = Directory.GetFiles(WrStyleFolder);
+                if(files.Length == 0){
+                  sysMessage = "No writing style currently present. Use AddNew";
+                  InputPackage.Add("No Files");
+                } 
+                foreach (var name in files)
+                {
+                    InputPackage.Add(name);
+                }
+            }
+            else if (layer == 3)
+            {
+                prop = typeof(User).GetProperty("WrStylePath");
+
+                if (prepPath == "3\\3\\1")
+                { //change
+                    WrStyleContents = await WritingStyle(WrStyleFolder, ApiFolder, DebugFolder, 0, option.ToString());
+                    prop.SetValue(textjson, $"writingstyle{option + 1}.txt");
+                    sysMessage = $"Changed writing style file to writingstyle{option + 1}.txt";
+                }
+                if (prepPath == @"3\\3\\3" && File.Exists(Path.Combine(WrStyleFolder, $"writingstyle{option - 1}.txt"))) 
+                {//delete
+                    WrStyleContents = await WritingStyle(WrStyleFolder, ApiFolder, DebugFolder, -1, option.ToString());
+                    prop.SetValue(textjson, $"writingstyle{option - 1}.txt");
+                    sysMessage = $"Deleted writingstyle{option}.txt file";
+                }
+
+            }
         }
-        LevelGrid[layer] = SwitchOptions(DisplayedMenus);
-       // string updatedJson = JsonConvert.SerializeObject(user, Formatting.Indented);
-        //File.WriteAllText(FilePath, updatedJson);
-
-        Console.WriteLine("Updated JSON saved successfully!");
+        string json = JsonConvert.SerializeObject(textjson, Formatting.Indented);
+        File.WriteAllText("propinfo.json", json);
     }
-   
-     //end it off
-    }
+    exit_while:
+    JObject jsonObj = JObject.Parse(jsonString);
+    List<object> valuesList = new List<object>();
 
-    private static int GetMenuLevel(string Menu)
+    foreach (var value in jsonObj.Values())
     {
-        char LevelChar = Menu.ToCharArray()[0];
+        valuesList.Add(value);
+    }
+    Thread.Sleep(2000);
+    SettingsOutput.AddRange(valuesList.Select(n => n.ToString()));
+    //
+    SettingsOutput.Add(WrStyleContents);
+    return SettingsOutput.ToArray();
+}
 
-        return Convert.ToInt16(Char.GetNumericValue(LevelChar));
+// Helper method that returns the bonus string for a given property name.
+private static string GetBonusForOption(string property)
+{
+    if (string.IsNullOrWhiteSpace(property))
+        return null; // Return null if the property is invalid.
+
+    // Get the current value from the deserialized settings.
+    PropertyInfo p = typeof(User).GetProperty(property);
+    if (p == null)
+    {
+        // If the property does not exist in the JSON, return null.
+        return null;
     }
 
+    string currentValue = p.GetValue(textjson)?.ToString() ?? "";
 
-    private static int SwitchOptions(List<string> options){
+    if (!string.IsNullOrWhiteSpace(currentValue))
+    {
+        // If a value is set, return it.
+        return currentValue;
+    }
+    else
+    {
+        // If no current value, try to get the default property.
+        PropertyInfo defaultProp = typeof(User).GetProperty("Default" + property);
+        string defaultValue = defaultProp?.GetValue(textjson)?.ToString() ?? "";
+        if (!string.IsNullOrWhiteSpace(defaultValue))
+        {
+            // Return the default value.
+            return defaultValue + "~";
+        }
+        else
+        {
+            // If neither is set, return an empty string.
+            return "";
+        }
+    }
+}
+
+// Updated Update method that prints each option with its bonus info on the same line.
+private static void Update(int Fopt, string Fpath, string Message)
+{
+    Console.Clear();
+    Console.WriteLine($"   Main{Fpath}\n   ------");
+
+    // For each option in the InputPackage, append the bonus value.
+    for (int i = 0; i < InputPackage.Count; i++)
+    {
+        string option = InputPackage[i];
+        string bonus = GetBonusForOption(option);
+
+        // Determine the prefix for selection (">" for selected, spaces for others).
+        string prefix = (i + 1 == Fopt ? " >" : "  ");
+
+        // Determine the special symbol and bonus text.
+        string specialSymbol = "";
+        string bonusText = "";
+
+        // Handle numeric options separately
+        if (TempNumOptions.Contains(option))
+        {
+            bonus = SettingsOutput[TempNumOptions.IndexOf(option)];
+        }
+
+        if (bonus == null && !TempNumOptions.Contains(option))
+        {
+            // If the option is not part of the JSON, print it as-is.
+            prefix += " ";
+            Console.WriteLine($"{prefix}{option}");
+            continue;
+        }
+        else if (string.IsNullOrEmpty(bonus))
+        {
+            // If no value or default value exists, use a warning symbol.
+            specialSymbol = "⚠️";
+        }
+        else
+        {
+            // If a value or default value exists, use a dot.
+            if (bonus.EndsWith("~"))
+            {
+                specialSymbol = "•";
+                bonus = bonus.Remove(bonus.Length - 1); // Remove the tilde
+            }
+            else specialSymbol = " ";
+            bonusText = $"[{bonus}]"; // Format the bonus text
+        }
+
+        // Format the line with the special symbol at the beginning and the JSON value on the right.
+        string formattedLine = $"{specialSymbol}{prefix}{option} {bonusText}";
+        Console.WriteLine(formattedLine);
+    }
+
+    Console.WriteLine("   ------\n   System Message: " + Message);
+}
+    private static int SwitchOptions(string sysMessage,string Fpath){
      ConsoleKeyInfo key;
-     int opt = 1, max_options = options.Count(),interaction = 0;
-
+     int opt = 1, max_options = InputPackage.Count(),interaction = 0;
+    
       do
         {
-            Console.Clear();
+         Update(opt,Fpath,sysMessage);
 
-            for (int i = 0; i < max_options; i++)
-            {
-                if (i == opt)
-                    Console.WriteLine(">" + options[i]);  // Selected option
-                else
-                    Console.WriteLine(" " + options[i]);  // Non-selected option
-            }
+         key = Console.ReadKey(true);
 
-            key = Console.ReadKey(true);
-
-            switch (key.Key)
-            {
-                case ConsoleKey.DownArrow:
-                    if (opt < max_options) opt++;
-                    else{
-                        opt= 1;
-                    }
-                    break;
-                case ConsoleKey.UpArrow:
-                    if (opt > 1) opt--;
-                    else{
-                        opt= max_options;
-                    }
-                    break;
-                case ConsoleKey.Enter:
-                    interaction = opt;
-                    break;
-                case ConsoleKey.Escape:
-                    interaction = -1;
-                    break;
-            }
+         switch (key.Key){
+            case ConsoleKey.DownArrow:
+                if (opt < max_options) opt++;
+                else{
+                    opt= 1;
+                }
+                break;
+            case ConsoleKey.UpArrow:
+                if (opt > 1) opt--;
+                else{
+                    opt= max_options;
+                }
+                break;
+            case ConsoleKey.Enter:
+                interaction = opt;
+                break;
+            case ConsoleKey.Escape:
+                interaction = -1;
+                break;
+         }
         } while (interaction == 0);
 
         return interaction;
     }
-}
 
+  private static List<string> FindOptionsByIndex(string Index,List<string> Layer){
+    List<string> Output = new List<string>{};
+    for(int i = 0; i<Layer.Count;i++){
+        if(Layer[i][0].ToString() == Index || Index == "-1") Output.Add(Layer[i].Substring(1));
+    }
+    return Output;
+  }
+}
 public class User
 {
     public string DynamicDownload { get; set; }
     public string AgressiveDownload { get; set; }
     public string WrStylePath { get; set; }
-    public string AgroSumm { get; set; }
+    public string AgressiveSummarizer { get; set; }
     public string DevTerminal { get; set; }
+    public string SaveAPImaterials { get; set; }
+
+    public string DefaultDynamicDownload { get; set; } = "N";
+    public string DefaultAgressiveDownload { get; set; } = "Y";
+    public string DefaultAgressiveSummarizer { get; set; } = "N";
+    public string DefaultDevTerminal { get; set; } = "N";
+    public string DefaultSaveAPImaterials { get; set; } = "Y";
 }
